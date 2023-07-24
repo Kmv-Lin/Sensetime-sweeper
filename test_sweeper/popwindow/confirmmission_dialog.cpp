@@ -46,7 +46,7 @@ void ConfirmMission_Dialog::list_showdelay(){
         mission_list_http->exit();
         mission_list_http->wait();
         existmission_dialog->close();
-        existmission_dialog = nullptr;
+        //existmission_dialog = nullptr;
         while(!mission_list_http->isFinished() && mission_list_http->isRunning());                                                             //等待http释放再释放父对象
         emit close_mission_dialog();
 }
@@ -114,9 +114,9 @@ void ConfirmMission_Dialog::issue_showdelay(){
         //mission_issue_http->stop();
         mission_issue_http->exit();
         mission_issue_http->wait();
-        mission_issue_http = nullptr;
+        //mission_issue_http = nullptr;
         existmission_dialog->close();
-        existmission_dialog = nullptr;
+        //existmission_dialog = nullptr;
         while(!mission_issue_http->isFinished() && mission_issue_http->isRunning() );                                                             //等待http释放再释放父对象
         emit close_mission_dialog();
 }
@@ -161,7 +161,7 @@ void ConfirmMission_Dialog::list_showdelay_again(){
         mission_list_http->exit();
         mission_list_http->wait();
         remotemission_dialog->close();
-        remotemission_dialog = nullptr;
+        //remotemission_dialog = nullptr;
         while(!mission_list_http->isFinished() && mission_list_http->isRunning());                                                             //等待http释放再释放父对象
         emit close_mission_dialog();
 }
