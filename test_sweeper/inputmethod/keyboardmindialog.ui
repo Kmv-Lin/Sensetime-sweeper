@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>KeyboardMinDialog</class>
+ <widget class="QDialog" name="KeyboardMinDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>480</width>
+    <height>272</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-image: url(:/new/keypad/picture/bgmphoto.png);</string>
+  </property>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>84</x>
+     <y>14</y>
+     <width>312</width>
+     <height>244</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>32</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url(:/new/keypad/picture/Frame 36.png);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignHCenter|Qt::AlignTop</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="closeButton">
+   <property name="geometry">
+    <rect>
+     <x>404</x>
+     <y>40</y>
+     <width>43</width>
+     <height>43</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>40</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url(:/new/keypad/picture/Delete.png);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="flat">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_1">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>76</y>
+     <width>98</width>
+     <height>42</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url();</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="keypad.qrc">
+     <normaloff>:/new/keypad/picture/Group1.png</normaloff>:/new/keypad/picture/Group1.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>98</width>
+     <height>42</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_2">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>76</y>
+     <width>98</width>
+     <height>42</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url();</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="keypad.qrc">
+     <normaloff>:/new/keypad/picture/Group2.png</normaloff>:/new/keypad/picture/Group2.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>98</width>
+     <height>42</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_3">
+   <property name="geometry">
+    <rect>
+     <x>291</x>
+     <y>76</y>
+     <width>98</width>
+     <height>42</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url();</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="keypad.qrc">
+     <normaloff>:/new/keypad/picture/Group3.png</normaloff>:/new/keypad/picture/Group3.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>98</width>
+     <height>42</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_6">
+   <property name="geometry">
+    <rect>
+     <x>291</x>
+     <y>120</y>
+     <width>98</width>
+     <height>42</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url();</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="keypad.qrc">
+     <normaloff>:/new/keypad/picture/Group6.png</normaloff>:/new/keypad/picture/Group6.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>98</width>
+     <height>42</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_4">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>120</y>
+     <width>98</width>
+     <height>42</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url();</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="keypad.qrc">
+     <normaloff>:/new/keypad/picture/Group4.png</normaloff>:/new/keypad/picture/Group4.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>98</width>
+     <height>42</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_5">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>120</y>
+     <width>98</width>
+     <height>42</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url();</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="keypad.qrc">
+     <normaloff>:/new/keypad/picture/Group5.png</normaloff>:/new/keypad/picture/Group5.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>98</width>
+     <height>42</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_7">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>165</y>
+     <width>98</width>
+     <height>42</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url();</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="keypad.qrc">
+     <normaloff>:/new/keypad/picture/Group7.png</normaloff>:/new/keypad/picture/Group7.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>98</width>
+     <height>42</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_8">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>165</y>
+     <width>98</width>
+     <height>42</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url();</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="keypad.qrc">
+     <normaloff>:/new/keypad/picture/Group8.png</normaloff>:/new/keypad/picture/Group8.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>98</width>
+     <height>42</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_9">
+   <property name="geometry">
+    <rect>
+     <x>291</x>
+     <y>165</y>
+     <width>98</width>
+     <height>42</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url();</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="keypad.qrc">
+     <normaloff>:/new/keypad/picture/Group9.png</normaloff>:/new/keypad/picture/Group9.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>98</width>
+     <height>42</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_10">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>210</y>
+     <width>98</width>
+     <height>42</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url();</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="keypad.qrc">
+     <normaloff>:/new/keypad/picture/Group10.png</normaloff>:/new/keypad/picture/Group10.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>98</width>
+     <height>42</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_0">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>210</y>
+     <width>98</width>
+     <height>42</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url();</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="keypad.qrc">
+     <normaloff>:/new/keypad/picture/Group0.png</normaloff>:/new/keypad/picture/Group0.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>98</width>
+     <height>42</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_11">
+   <property name="geometry">
+    <rect>
+     <x>291</x>
+     <y>210</y>
+     <width>98</width>
+     <height>42</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url();</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset resource="keypad.qrc">
+     <normaloff>:/new/keypad/picture/Group11.png</normaloff>:/new/keypad/picture/Group11.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>98</width>
+     <height>42</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="Number_lineEdit">
+   <property name="geometry">
+    <rect>
+     <x>154</x>
+     <y>23</y>
+     <width>171</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>32</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 255, 255);
+background-image: url();
+border-color: rgba(254, 254, 254, 0);</string>
+   </property>
+   <property name="text">
+    <string>请输入密码</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+ </widget>
+ <resources>
+  <include location="keypad.qrc"/>
+ </resources>
+ <connections/>
+</ui>

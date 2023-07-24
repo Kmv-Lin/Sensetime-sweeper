@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>settingWindow</class>
+ <widget class="QMainWindow" name="settingWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>480</width>
+    <height>272</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QScrollArea" name="scrollArea">
+    <property name="geometry">
+     <rect>
+      <x>5</x>
+      <y>55</y>
+      <width>470</width>
+      <height>218</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>22</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="verticalScrollBarPolicy">
+     <enum>Qt::ScrollBarAsNeeded</enum>
+    </property>
+    <property name="horizontalScrollBarPolicy">
+     <enum>Qt::ScrollBarAlwaysOff</enum>
+    </property>
+    <property name="widgetResizable">
+     <bool>true</bool>
+    </property>
+    <widget class="QWidget" name="scrollAreaWidgetContents">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>468</width>
+       <height>216</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <widget class="QPushButton" name="SetNeworkButton">
+      <property name="geometry">
+       <rect>
+        <x>8</x>
+        <y>57</y>
+        <width>438</width>
+        <height>48</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>22</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-color: rgb(93, 191, 196);
+background-color: rgba(0, 0, 0, 0);</string>
+      </property>
+      <property name="text">
+       <string>网络</string>
+      </property>
+      <property name="icon">
+       <iconset resource="picture.qrc">
+        <normaloff>:/new/picture/setting_interface/Vector1.png</normaloff>:/new/picture/setting_interface/Vector1.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>42</width>
+        <height>30</height>
+       </size>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="SetVolumeButton">
+      <property name="geometry">
+       <rect>
+        <x>8</x>
+        <y>113</y>
+        <width>438</width>
+        <height>48</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>22</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-color: rgb(93, 191, 196);</string>
+      </property>
+      <property name="text">
+       <string>音量</string>
+      </property>
+      <property name="icon">
+       <iconset resource="picture.qrc">
+        <normaloff>:/new/picture/setting_interface/Vector2.png</normaloff>:/new/picture/setting_interface/Vector2.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>30</width>
+        <height>30</height>
+       </size>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="SetDiskButton">
+      <property name="geometry">
+       <rect>
+        <x>8</x>
+        <y>169</y>
+        <width>438</width>
+        <height>48</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>22</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-color: rgb(93, 191, 196);</string>
+      </property>
+      <property name="text">
+       <string>磁盘空间</string>
+      </property>
+      <property name="icon">
+       <iconset resource="picture.qrc">
+        <normaloff>:/new/picture/setting_interface/Vector3.png</normaloff>:/new/picture/setting_interface/Vector3.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>38</width>
+        <height>26</height>
+       </size>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="SetMissionButton">
+      <property name="geometry">
+       <rect>
+        <x>8</x>
+        <y>225</y>
+        <width>438</width>
+        <height>48</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>22</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>任务管理</string>
+      </property>
+      <property name="icon">
+       <iconset resource="picture.qrc">
+        <normaloff>:/new/picture/setting_interface/Vector4.png</normaloff>:/new/picture/setting_interface/Vector4.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>28</width>
+        <height>32</height>
+       </size>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="SysUpdateButton">
+      <property name="geometry">
+       <rect>
+        <x>8</x>
+        <y>281</y>
+        <width>438</width>
+        <height>48</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>22</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>系统与更新</string>
+      </property>
+      <property name="icon">
+       <iconset resource="picture.qrc">
+        <normaloff>:/new/picture/setting_interface/Vector5.png</normaloff>:/new/picture/setting_interface/Vector5.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>30</width>
+        <height>30</height>
+       </size>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="SetDebugButton">
+      <property name="geometry">
+       <rect>
+        <x>8</x>
+        <y>393</y>
+        <width>438</width>
+        <height>48</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>22</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>调试入口</string>
+      </property>
+      <property name="icon">
+       <iconset resource="picture.qrc">
+        <normaloff>:/new/picture/setting_interface/Vector7.png</normaloff>:/new/picture/setting_interface/Vector7.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>32</width>
+        <height>32</height>
+       </size>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="SetVersionButton">
+      <property name="geometry">
+       <rect>
+        <x>8</x>
+        <y>337</y>
+        <width>438</width>
+        <height>48</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>22</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>关于设备</string>
+      </property>
+      <property name="icon">
+       <iconset resource="picture.qrc">
+        <normaloff>:/new/picture/setting_interface/Vector6.png</normaloff>:/new/picture/setting_interface/Vector6.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>30</width>
+        <height>30</height>
+       </size>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="ReturnButton">
+      <property name="geometry">
+       <rect>
+        <x>13</x>
+        <y>1</y>
+        <width>105</width>
+        <height>48</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>24</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>返回</string>
+      </property>
+      <property name="icon">
+       <iconset resource="picture.qrc">
+        <normaloff>:/new/picture/setting_interface/return.png</normaloff>:/new/picture/setting_interface/return.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>21</width>
+        <height>14</height>
+       </size>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="ManualCheckButton">
+      <property name="geometry">
+       <rect>
+        <x>8</x>
+        <y>449</y>
+        <width>438</width>
+        <height>48</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>24</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>手动自检</string>
+      </property>
+      <property name="icon">
+       <iconset resource="picture.qrc">
+        <normaloff>:/new/picture/setting_interface/Vector6.png</normaloff>:/new/picture/setting_interface/Vector6.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>30</width>
+        <height>30</height>
+       </size>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>208</x>
+      <y>10</y>
+      <width>64</width>
+      <height>39</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>AR PL UMing CN</family>
+      <pointsize>26</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>设 置</string>
+    </property>
+    <property name="textFormat">
+     <enum>Qt::PlainText</enum>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="picture.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>ReturnButton</sender>
+   <signal>clicked()</signal>
+   <receiver>settingWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>71</x>
+     <y>80</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>239</x>
+     <y>135</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

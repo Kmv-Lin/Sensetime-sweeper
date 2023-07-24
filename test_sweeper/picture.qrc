@@ -1,0 +1,71 @@
+<RCC>
+    <qresource prefix="/new">
+        <file>picture/Group 26.png</file>
+        <file>picture/Group 29.png</file>
+        <file>picture/mainpicture.png</file>
+        <file>picture/Rectangle 278.png</file>
+        <file>picture/mission_interface/book_mission.png</file>
+        <file>picture/mission_interface/today_mission.png</file>
+        <file>picture/selfcheck/check.png</file>
+        <file>picture/setting_interface/debug.png</file>
+        <file>picture/setting_interface/disk.png</file>
+        <file>picture/setting_interface/mission.png</file>
+        <file>picture/setting_interface/Setting.png</file>
+        <file>picture/setting_interface/system_updata.png</file>
+        <file>picture/setting_interface/verson.png</file>
+        <file>picture/setting_interface/volume.png</file>
+        <file>picture/setting_interface/WIFI.png</file>
+        <file>picture/setting_interface/inputnumber.png</file>
+        <file>picture/mission_interface/Rectangle 250.png</file>
+        <file>picture/mission_interface/Rectangle 251.png</file>
+        <file>picture/mission_interface/Rectangle 252.png</file>
+        <file>picture/selfcheck/Ellipse 2.png</file>
+        <file>picture/selfcheck/Frame 22.png</file>
+        <file>picture/setting_interface/Vector1.png</file>
+        <file>picture/setting_interface/Vector2.png</file>
+        <file>picture/setting_interface/Vector3.png</file>
+        <file>picture/setting_interface/Vector4.png</file>
+        <file>picture/setting_interface/Vector5.png</file>
+        <file>picture/setting_interface/Vector6.png</file>
+        <file>picture/setting_interface/Vector7.png</file>
+        <file>picture/setting_interface/return.png</file>
+        <file>picture/mission_interface/return.png</file>
+        <file>picture/setting_interface/Rectangle 252.png</file>
+        <file>picture/Auto.png</file>
+        <file>picture/Cloud.png</file>
+        <file>picture/manual.png</file>
+        <file>picture/remote.png</file>
+        <file>picture/mission_interface/mission_bakg.png</file>
+        <file>picture/mainpicture1.png</file>
+        <file>picture/setting_interface/volume1.png</file>
+        <file>picture/setting_interface/volume2.png</file>
+        <file>picture/batte1.png</file>
+        <file>picture/batte2.png</file>
+        <file>picture/water_full.png</file>
+        <file>picture/water_low.png</file>
+        <file>picture/water_middle.png</file>
+        <file>picture/WIFI_bad.png</file>
+        <file>picture/WIFI_good.png</file>
+        <file>picture/WIFI_middle.png</file>
+        <file>picture/batter3.png</file>
+        <file>picture/startwindow/start.png</file>
+        <file>picture/startwindow/Ellipse.png</file>
+        <file>picture/startwindow/start1.png</file>
+        <file>picture/mission_interface/MissionExist.png</file>
+        <file>picture/setting_interface/Vol_high.png</file>
+        <file>picture/setting_interface/Vol_low.png</file>
+        <file>picture/setting_interface/Volume.png</file>
+        <file>picture/setting_interface/diskspace.png</file>
+        <file>picture/setting_interface/cleardisk.png</file>
+        <file>picture/setting_interface/cleardisk_text.png</file>
+        <file>picture/mission_interface/Rectangle 255.png</file>
+        <file>picture/setting_interface/sysupdate.png</file>
+        <file>picture/setting_interface/Rectangle 251.png</file>
+        <file>picture/setting_interface/Rectangle 253.png</file>
+        <file>picture/setting_interface/volume3.png</file>
+        <file>picture/setting_interface/network.png</file>
+        <file>picture/mission_interface/Rectangle 254.png</file>
+        <file>picture/setting_interface/13DLOCK 1.png</file>
+        <file>picture/setting_interface/Polygon 1.png</file>
+    </qresource>
+</RCC>

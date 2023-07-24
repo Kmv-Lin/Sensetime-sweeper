@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/new/keypad">
+        <file>picture/keypad/backspace.png</file>
+        <file>picture/keypad/down.png</file>
+        <file>picture/keypad/keyboard.jpg</file>
+        <file>picture/keypad/left.png</file>
+        <file>picture/keypad/right.png</file>
+        <file>picture/keypad/top.png</file>
+        <file>picture/bgmphoto.png</file>
+        <file>picture/Delete.png</file>
+        <file>picture/Frame 36.png</file>
+        <file>picture/Rectangle 225.png</file>
+        <file>picture/Group0.png</file>
+        <file>picture/Group1.png</file>
+        <file>picture/Group2.png</file>
+        <file>picture/Group3.png</file>
+        <file>picture/Group4.png</file>
+        <file>picture/Group5.png</file>
+        <file>picture/Group6.png</file>
+        <file>picture/Group7.png</file>
+        <file>picture/Group8.png</file>
+        <file>picture/Group9.png</file>
+        <file>picture/Group10.png</file>
+        <file>picture/Group11.png</file>
+    </qresource>
+</RCC>

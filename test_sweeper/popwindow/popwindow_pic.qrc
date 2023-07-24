@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/new/pic">
+        <file>picture/MissionExist.png</file>
+        <file>picture/cleardisk.png</file>
+        <file>picture/cleardisk_text.png</file>
+    </qresource>
+</RCC>
