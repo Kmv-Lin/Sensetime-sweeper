@@ -25,9 +25,7 @@ public:
     explicit History_mission(QWidget *parent = 0);
     ~History_mission();
     int angle;
-
     bool isfinished;
-
 protected:
     //void paintEvent(QPaintEvent *) override;
     bool eventFilter(QObject *, QEvent *) override;

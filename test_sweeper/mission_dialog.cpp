@@ -39,16 +39,16 @@ Mission_Dialog::Mission_Dialog(QWidget *parent) :
     connect(mission_http,SIGNAL(finished()),mission_http,SLOT(deleteLater()));
     mission_http->start();
 
+    history_mission = new History_mission(this);
+    connect(history_mission,SIGNAL(close_mission_dialog()),this,SLOT(on_ReturnButton_clicked()));
+    connect(mission_http,SIGNAL(Mission_data(QString)),history_mission,SLOT(MissionList_recv(QString)));
+
+    history_mission->hide();
+
     today_mission = new Today_mission(this);
     connect(today_mission,SIGNAL(close_mission_dialog()),this,SLOT(on_ReturnButton_clicked()));
     connect(mission_http,SIGNAL(Mission_data(QString)),today_mission,SLOT(MissionList_recv(QString)));
     today_mission->hide();
-
-    history_mission = new History_mission(this);
-    connect(history_mission,SIGNAL(close_mission_dialog()),this,SLOT(on_ReturnButton_clicked()));
-    connect(mission_http,SIGNAL(Mission_data(QString)),history_mission,SLOT(MissionList_recv(QString)));
-    history_mission->hide();
-
 
 
 //    QPixmap pixmap = QPixmap(":/new/picture/mission_interface/today_mission.png").scaled(this->size());
@@ -56,6 +56,7 @@ Mission_Dialog::Mission_Dialog(QWidget *parent) :
 //    Palette.setBrush(QPalette::Background, QBrush(pixmap));
 //    this->setPalette(Palette);
 }
+
 
 Mission_Dialog::~Mission_Dialog()
 {
@@ -74,8 +75,10 @@ void Mission_Dialog::on_ReturnButton_clicked()
     //mission_http->stop();
     mission_http->exit();
     mission_http->wait();
-    //today_mission = nullptr;
-    //history_mission = nullptr;
+
+//    thread->quit();
+//    thread->deleteLater();
+
      while(!mission_http->isFinished() && mission_http->isRunning()){};
      this->close();
 }

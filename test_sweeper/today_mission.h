@@ -15,6 +15,7 @@
 #include <QPaintEvent>
 
 #include "popwindow/confirmmission_dialog.h"
+#include"history_mission.h"
 
 #define MISSION_MAX  256
 

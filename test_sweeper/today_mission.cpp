@@ -95,7 +95,7 @@ void Today_mission::MissionList_recv(QString str){
         qDebug() << "********get data failed********";
         return;
     }else{
-        ui->ReturnButton->setEnabled(false);
+        //ui->ReturnButton->setEnabled(false);
         //qDebug() << "emit2";
         int Totalnum = Missionmap["total"].toInt();
         int btnNum = Totalnum;
@@ -214,7 +214,8 @@ void Today_mission::MissionList_recv(QString str){
 
     isfinished = true;
     //qDebug() << "today_finish";
-    ui->ReturnButton->setEnabled(true);
+
+    //ui->ReturnButton->setEnabled(true);
 }
 
 void Today_mission::list_btn_clicked(QString MissionID)

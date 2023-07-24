@@ -6,6 +6,7 @@
 #include "thread/my_thread.h"
 #include <QDateTime>
 #include <QUdpSocket>
+#include <QThread>
 
 #include "inputmethod/inputmethod.h"
 #include "inputmethod/keyboardmindialog.h"
@@ -86,6 +87,7 @@ private:
     uint8_t FSM_state;
     char Vehicle_Controller;
     volatile bool data_finish;
+    QThread *thread;
 };
 
 #endif // MAINWINDOW_H

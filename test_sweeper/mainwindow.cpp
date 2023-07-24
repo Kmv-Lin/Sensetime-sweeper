@@ -172,7 +172,6 @@ void MainWindow::on_SettingButton_clicked()
 void MainWindow::on_MissionButton_clicked()         //打开任务窗口
 {
     //ui->mission_widget->setVisible(false);//打开任务窗口
-
      Mission_Dialog  *win = new Mission_Dialog(this);
      //win->setWindowFlags(Qt::Window);                //set as window增加窗口属性，会增加标题和边框！！
      win->show();
@@ -320,7 +319,7 @@ void MainWindow::Receive_MainW_show(bool data_finished){
     qDebug() << "********m_pMySerialPort COM3 open  in mainwindow********";
 
     //启动网口接收
-    //m_HttpThread->start();
+    m_HttpThread->start();
 }
 
 void MainWindow::KeyboardMinDialog_sign(const char *password)

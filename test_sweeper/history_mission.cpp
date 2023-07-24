@@ -35,6 +35,7 @@ History_mission::History_mission(QWidget *parent) :
         ui->scrollArea->setStyleSheet("QScrollArea{background-color: rgba(0, 0, 0, 0);border:0px solid #838486;  }");//透明+取消线条
         ui->scrollAreaWidgetContents->setStyleSheet("background-color: rgba(0, 0, 0, 0);");//透明
         ui->scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
         ui->textEdit->setStyleSheet("background-color: rgba(0, 0, 0, 0);border:0px;font-family: 'Source Han Sans CN';font-size: 22px;");//透明+取消线条
 
 
@@ -204,7 +205,7 @@ void History_mission::MissionList_recv(QString str){
             Layout->addWidget(statusbutton);
             list_btn->setLayout(Layout);
             list_btn->show();
-            QCoreApplication::processEvents(QEventLoop::AllEvents,10);
+            QCoreApplication::processEvents(QEventLoop::AllEvents,5);
 
 //            qDebug() << "ID:" << strmap["id"].toInt();
 //            qDebug() << "STARTTIME:" << strmap["start_time"].toString();
@@ -214,7 +215,9 @@ void History_mission::MissionList_recv(QString str){
 //            qDebug() << "DEVICENAME" << strmap["device_name"].toString();
         }
 
+
     }
+
      isfinished = true;
      //qDebug() << "history_finish";
      ui->ReturnButton->setEnabled(true);

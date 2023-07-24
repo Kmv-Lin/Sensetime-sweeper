@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QScrollArea>
 #include <QWidget>
+#include <QThread>
 
 #include "history_mission.h"
 #include "thread/mission_http.h"
@@ -26,7 +27,6 @@ private slots:
     void on_ReturnButton_clicked();
 
 
-
 //    void on_BookButton_clicked();
 
 //    void on_TodayButton_clicked();
@@ -38,6 +38,7 @@ private slots:
     void on_HistoryButton_pressed();
 
     void on_StartButton_pressed();
+signals:
 
 private:
     Ui::Mission_Dialog *ui;
@@ -46,6 +47,7 @@ private:
     Today_mission *today_mission;
     QScrollArea *scrollarea;
     QWidget *scrollwidget;
+    QThread *thread;
 };
 
 #endif // MISSION_DIALOG_H

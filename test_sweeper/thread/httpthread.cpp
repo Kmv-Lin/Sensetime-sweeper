@@ -20,7 +20,7 @@ HttpReadThread::HttpReadThread(int flag1,QObject *parent) :
     if(this->flag == Start_Window){
         times = 2000;
     }else if(this->flag == Main_Window){
-        times = 15000;
+        times = 10000;
     }
     connect(m_pAutoTimer, SIGNAL(timeout()), this, SLOT(timeAuto()));
     //getDiskSpaceManger = new QNetworkAccessManager();
