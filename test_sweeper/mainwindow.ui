@@ -52,8 +52,8 @@
      <rect>
       <x>20</x>
       <y>10</y>
-      <width>173</width>
-      <height>30</height>
+      <width>58</width>
+      <height>28</height>
      </rect>
     </property>
     <property name="font">
@@ -115,7 +115,7 @@
      </date>
     </property>
     <property name="displayFormat">
-     <string>yyyy/M/d  h:mm</string>
+     <string>h:mm</string>
     </property>
     <property name="timeSpec">
      <enum>Qt::LocalTime</enum>
@@ -124,9 +124,9 @@
    <widget class="QLabel" name="sign_label">
     <property name="geometry">
      <rect>
-      <x>249</x>
+      <x>86</x>
       <y>0</y>
-      <width>61</width>
+      <width>33</width>
       <height>50</height>
      </rect>
     </property>
@@ -136,7 +136,9 @@
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-image: url(:/new/picture/WIFI_good.png);</string>
+     <string notr="true">background-image: url(:/new/picture/WIFI_good.png);
+background-repeat:no-repeat;
+background-position:center center;</string>
     </property>
     <property name="text">
      <string/>
@@ -145,9 +147,9 @@
    <widget class="QLabel" name="water_label">
     <property name="geometry">
      <rect>
-      <x>324</x>
+      <x>303</x>
       <y>0</y>
-      <width>51</width>
+      <width>65</width>
       <height>50</height>
      </rect>
     </property>
@@ -157,7 +159,7 @@
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-image: url(:/new/picture/water_middle.png);</string>
+     <string notr="true">background-image: url(:/new/picture/water_normal.png);</string>
     </property>
     <property name="text">
      <string/>
@@ -378,6 +380,27 @@
      <string/>
     </property>
    </widget>
+   <widget class="QLabel" name="water_label_2">
+    <property name="geometry">
+     <rect>
+      <x>222</x>
+      <y>0</y>
+      <width>65</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/new/picture/Rubbish_normal.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
    <zorder>label</zorder>
    <zorder>batter_1</zorder>
    <zorder>BatterBar</zorder>
@@ -391,6 +414,7 @@
    <zorder>batter_2</zorder>
    <zorder>statue_label2</zorder>
    <zorder>RunningState_label</zorder>
+   <zorder>water_label_2</zorder>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

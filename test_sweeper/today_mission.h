@@ -16,7 +16,8 @@
 #include <QDateTime>
 
 #include "popwindow/confirmmission_dialog.h"
-#include"history_mission.h"
+#include "thread/mission_http.h"
+#include "history_mission.h"
 
 #define MISSION_MAX  256
 
@@ -45,6 +46,8 @@ private slots:
     void list_btn_clicked(QString);
     void ScrollBarValchange(int);
     void AutoRun(int ,int ,QString );
+    void water_flash();
+    void RefreshData();
 private:
     Ui::Today_mission *ui;
     QPushButton *list_btn[MISSION_MAX];
@@ -55,9 +58,14 @@ private:
     QScrollBar *verticalScrollBar;
     QString scrollbarsheet;
     QTimer *timer;
+    QTimer *Cnt_timer;
     QPixmap pix;
+    QLabel *water_label;
+    QLabel *rubbish_label;
+    QLabel *sign_label;
     void paint();
     QDateTime datetime;
+    Mission_http *mission_http;
 };
 
 #endif // TODAY_MISSION_H

@@ -17,6 +17,16 @@ History_mission::History_mission(QWidget *parent) :
         //isfinished = true;
         ui->widget->installEventFilter(this);
 
+
+        sign_label = new QLabel(this);
+        sign_label->setGeometry(86,0,33,50);
+        sign_label->setStyleSheet("QLabel{background-image: url(:/new/picture/WIFI_good.png);background-repeat:no-repeat;background-position:center center;}");
+        water_label = new QLabel(this);
+        water_label->setGeometry(303,0,65,50);
+        rubbish_label = new QLabel(this);
+        rubbish_label->setGeometry(222,0,65,50);
+        rubbish_label->setStyleSheet("QLabel{background-image: url(:/new/picture/Rubbish_normal.png);border:0px;  }");
+
         //ui->TodayButton->setPalette(pel);
         //字体颜色-翠绿
         //pel.setColor(QPalette::ButtonText,QColor(0,150,152));
@@ -25,8 +35,9 @@ History_mission::History_mission(QWidget *parent) :
         //"返回"背景翠绿色+字体白色+线宽1px翠绿色+四边圆角
          ui->ReturnButton->setStyleSheet("QPushButton{background-color: rgb(0, 150, 157);color:white;border:1px solid #00969D;border-radius:5px;  }");//线条
 
-         ui->dateTimeEdit->setStyleSheet("QDateTimeEdit{background-color: rgba(0, 0, 0, 0);border:0px solid #838486;  }");//透明+取消线条
-         ui->BatterBar->setStyleSheet("QProgressBar::chunk{background:solid #70DADF}QProgressBar{border-color: rgba(255, 255, 255, 0);color: rgb(255, 255, 255);background-color: rgba(255, 255, 255, 0);}");//电池图片+取消线条+颜色#70DADF  QProgressBar{border:0px solid #838486; text-align:Qt::AlignCenter;}
+         ui->dateTimeEdit->setStyleSheet("QDateTimeEdit{background-color: rgba(0, 0, 0, 0);border:0px solid #838486;}");//透明+取消线条
+         ui->dateTimeEdit->setDateTime(QDateTime::currentDateTime());
+         ui->BatterBar->setStyleSheet("QProgressBar::chunk{background:rgba(255, 255, 255, 0);}QProgressBar{border-color: rgba(255, 255, 255, 0);color: rgb(255, 255, 255);background-color: rgba(255, 255, 255, 0);}");//电池图片+取消线条+颜色#70DADF  QProgressBar{border:0px solid #838486; text-align:Qt::AlignCenter;}
          ui->BatterBar->setValue(0);//Bar
 
         ui->scrollArea->setStyleSheet("QScrollArea{background-color: rgba(0, 0, 0, 0);border:0px solid #838486;  }");//透明+取消线条
@@ -61,27 +72,56 @@ History_mission::History_mission(QWidget *parent) :
         this->angle = 0;
         ui->textEdit->setText("加载中");
         ui->textEdit->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+
+        Cnt_timer = new QTimer(this);
+        Cnt_timer->start(8000);
+        connect(Cnt_timer,SIGNAL(timeout()),this,SLOT(RefreshData()));
+        mission_http = nullptr;
+}
+
+void History_mission::RefreshData(){
+    mission_http = new Mission_http(GET_TOKEN,0,this);
+    connect(mission_http,SIGNAL(finished()),mission_http,SLOT(deleteLater()));
+    connect(mission_http,SIGNAL(Mission_data(QString)),this,SLOT(MissionList_recv(QString)));
+    mission_http->start();
 }
 
 void History_mission::set_watter_label(QString state, int watter_info)
 {
-    if(watter_info<35){
-        ui->water_label->setStyleSheet("QLabel{background-image: url(:/new/picture/water_low.png);border:0px solid #838486;  }");
+    if(watter_info<=10){
+        water_label->setStyleSheet("QLabel{background-image: url(:/new/picture/water_low.png);border:0px solid #838486;  }");
     }
-    else if(watter_info<70){
-        ui->water_label->setStyleSheet("QLabel{background-image: url(:/new/picture/water_middle.png);border:0px solid #838486;  }");
+    else{
+        water_label->setStyleSheet("QLabel{background-image: url(:/new/picture/water_normal.png);border:0px solid #838486;  }");
+        if(water_label->isHidden()){
+            water_label->show();
+        }
     }
-    else
-        ui->water_label->setStyleSheet("QLabel{background-image: url(:/new/picture/water_full.png);border:0px solid #838486;  }");
+}
+
+void History_mission::water_flash(){
+    if(water_label->isHidden()){
+        water_label->show();
+    }else{
+        water_label->hide();
+    }
 }
 
 void History_mission::AutoRun(int battery_info,int water_info,QString water_state)
 {
-    //info = true;
     datetime = QDateTime::currentDateTime();
     ui->dateTimeEdit->setDateTime(datetime);
+    if(battery_info <=15){
+       ui->BatterBar->setStyleSheet("QProgressBar::chunk{background:solid #EC5249}QProgressBar{border-color: rgba(255, 255, 255, 0);color: rgb(255, 255, 255);background-color: rgba(255, 255, 255, 0);}");
+    }else{
+       ui->BatterBar->setStyleSheet("QProgressBar::chunk{background:solid #70DADF}QProgressBar{border-color: rgba(255, 255, 255, 0);color: rgb(255, 255, 255);background-color: rgba(255, 255, 255, 0);}");
+    }
     ui->BatterBar->setValue(battery_info);//Bar
+
     set_watter_label(water_state, water_info);
+    if(water_info <= 10){
+        water_flash();
+    }
 
 }
 
@@ -113,6 +153,8 @@ void History_mission::MissionList_recv(QString str){
     //isfinished = false;
     timer->stop();
     delete timer;
+    Cnt_timer->stop();
+
     ui->widget->hide();
     QJson::Parser parser;
     bool ok;
@@ -252,6 +294,13 @@ History_mission::~History_mission()
 void History_mission::on_ReturnButton_clicked()
 {
     //qDebug() << "history_finish" << isfinished;
+    Cnt_timer->stop();
+    delete Cnt_timer;
+
+    if(mission_http){
+        mission_http->exit();
+        mission_http->wait();
+    }
     this->close();
     emit close_mission_dialog();
 

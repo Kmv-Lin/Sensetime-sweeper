@@ -58,7 +58,7 @@ private:
     QTimer *timer;
     QDateTime datetime;
     int flag;
-
+    bool DataSend;
 };
 
 #endif // MISSION_DIALOG_H

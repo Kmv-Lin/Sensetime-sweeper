@@ -44,12 +44,13 @@ Mission_Dialog::Mission_Dialog(QWidget *parent) :
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(SendInfo())); //关联超时信号和曹函数 10S更新状态     //每10s更新世界时间以及FSM状态
-    unsigned int times = 500;
+    unsigned int times = 800;
     this->timer->start(times);     //定时器启动
 
     history_thread = nullptr;
     today_thread = nullptr;
     flag = 0;
+    //DataSend = false;
 //    QPixmap pixmap = QPixmap(":/new/picture/mission_interface/today_mission.png").scaled(this->size());
 //    QPalette Palette;
 //    Palette.setBrush(QPalette::Background, QBrush(pixmap));
@@ -64,6 +65,7 @@ void Mission_Dialog::AutoRun(int BatteryInfo,int WaterInfo,QString WaterState)
 }
 
 void Mission_Dialog::SendInfo(){
+    //DataSend = true;
     emit mission_show(battery_info,water_info,water_state);
 }
 

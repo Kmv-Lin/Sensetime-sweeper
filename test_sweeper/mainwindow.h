@@ -63,7 +63,7 @@ private slots:
     void set_RunningState_Label1();
 
     void MainWindow_FSM();
-
+    void water_flash();
 private:
     Ui::MainWindow *ui;
 
@@ -78,6 +78,7 @@ private:
     HttpReadThread *m_HttpThread;
 
     QTimer *timer;
+    QTimer *water_timer;
     uint8_t keyboard_flag;
     uint8_t keyboard_flag_setting;
     int finish_num;

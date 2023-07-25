@@ -42,10 +42,7 @@
         <file>picture/batte1.png</file>
         <file>picture/batte2.png</file>
         <file>picture/water_full.png</file>
-        <file>picture/water_low.png</file>
         <file>picture/water_middle.png</file>
-        <file>picture/WIFI_bad.png</file>
-        <file>picture/WIFI_good.png</file>
         <file>picture/WIFI_middle.png</file>
         <file>picture/batter3.png</file>
         <file>picture/startwindow/start.png</file>
@@ -68,5 +65,11 @@
         <file>picture/setting_interface/13DLOCK 1.png</file>
         <file>picture/setting_interface/Polygon 1.png</file>
         <file>picture/startwindow/Ellipse 2.png</file>
+        <file>picture/WIFI_good.png</file>
+        <file>picture/WIFI_bad.png</file>
+        <file>picture/water_low.png</file>
+        <file>picture/water_normal.png</file>
+        <file>picture/Rubbish_full.png</file>
+        <file>picture/Rubbish_normal.png</file>
     </qresource>
 </RCC>

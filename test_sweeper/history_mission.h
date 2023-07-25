@@ -13,6 +13,9 @@
 #include <QLabel>
 #include <QScrollArea>
 #include <QDateTime>
+#include <QProgressBar>
+
+#include "thread/mission_http.h"
 
 namespace Ui {
 class History_mission;
@@ -42,16 +45,22 @@ private slots:
     //void on_BookButton_clicked();
     //void on_TodayButton_clicked();
     void AutoRun(int,int,QString);
+    void water_flash();
+    void RefreshData();
 private:
     Ui::History_mission *ui;
     QScrollBar *verticalScrollBar;
     QString scrollbarsheet;
     QTimer *timer;
+    QTimer *Cnt_timer;
     QPixmap pix;
     QScrollArea *scrollarea;
-    QLabel *lab;
+    QLabel *water_label;
+    QLabel *rubbish_label;
+    QLabel *sign_label;
     void paint();
     QDateTime datetime;
+    Mission_http *mission_http;
 };
 
 #endif // HISTORY_MISSION_H

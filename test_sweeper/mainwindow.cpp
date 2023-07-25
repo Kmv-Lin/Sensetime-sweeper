@@ -61,6 +61,9 @@ MainWindow::MainWindow(QWidget *parent) :
      ui->RunningState_label->hide();
      ui->RunningState_label->setStyleSheet("QLabel{background-color: rgb(15, 155, 163);border:1px solid #5DBFC4;border-top-right-radius:5px;border-top-left-radius:5px;color: rgb(255, 255, 255);  }");//线条
 
+     water_timer = new QTimer(this);
+     connect(water_timer, SIGNAL(timeout()), this, SLOT(water_flash())); //关联超时信号和曹函数 10S更新状态     //每10s更新世界时间以及FSM状态
+
      finish_num = 0;
      all_num = 0;
      //RemoteCtrlState_flag = false;
@@ -110,6 +113,11 @@ void MainWindow::vehicleStateSlot(QString str)
 
         //显示电量
          battery_info = battery["battery_info"].toInt();
+         if(battery_info <=15){
+            ui->BatterBar->setStyleSheet("QProgressBar::chunk{background:solid #EC5249}QProgressBar{border-color: rgba(255, 255, 255, 0);color: rgb(255, 255, 255);background-color: rgba(255, 255, 255, 0);}");
+         }else{
+            ui->BatterBar->setStyleSheet("QProgressBar::chunk{background:solid #70DADF}QProgressBar{border-color: rgba(255, 255, 255, 0);color: rgb(255, 255, 255);background-color: rgba(255, 255, 255, 0);}");
+         }
          ui->BatterBar->setValue(battery_info);//Bar
         //qDebug() << "********battery_info is ********"<<battery_info;
 
@@ -479,14 +487,26 @@ void MainWindow::set_statue_label(char mode)
 
 void MainWindow::set_watter_label(QString state, int watter_info)
 {
-    if(watter_info<35){
+
+    if(watter_info<=10){
+        water_timer->start(700);
         ui->water_label->setStyleSheet("QLabel{background-image: url(:/new/picture/water_low.png);border:0px solid #838486;  }");
     }
-    else if(watter_info<70){
-        ui->water_label->setStyleSheet("QLabel{background-image: url(:/new/picture/water_middle.png);border:0px solid #838486;  }");
+    else{
+        water_timer->stop();
+        ui->water_label->setStyleSheet("QLabel{background-image: url(:/new/picture/water_normal.png);border:0px solid #838486;  }");
+        if(ui->water_label->isHidden()){
+            ui->water_label->show();
+        }
     }
-    else
-        ui->water_label->setStyleSheet("QLabel{background-image: url(:/new/picture/water_full.png);border:0px solid #838486;  }");
+}
+
+void MainWindow::water_flash(){
+    if(ui->water_label->isHidden()){
+        ui->water_label->show();
+    }else{
+        ui->water_label->hide();
+    }
 }
 
 void MainWindow::set_Display_Label_IdleState(int finish, int allnum)
