@@ -6,7 +6,9 @@
 #include "qdatetime.h"
 
 #include<QDebug>
-
+static int battery_info;
+static int water_info;
+static QString water_state;
 Mission_Dialog::Mission_Dialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Mission_Dialog)
@@ -32,6 +34,7 @@ Mission_Dialog::Mission_Dialog(QWidget *parent) :
     ui->HistoryButton->setPalette(pel);
     ui->StartButton->setPalette(pel);
 
+
     ui->StartButton->setStyleSheet("background-color:rgba(0,0,0,0);border:1px solid #5DBFC4;border-radius:4px; ");
     ui->HistoryButton->setStyleSheet("background-color:rgba(0,0,0,0);border:1px solid #5DBFC4;border-radius:4px; ");
 
@@ -39,24 +42,30 @@ Mission_Dialog::Mission_Dialog(QWidget *parent) :
     connect(mission_http,SIGNAL(finished()),mission_http,SLOT(deleteLater()));
     mission_http->start();
 
-    history_mission = new History_mission(this);
-    connect(history_mission,SIGNAL(close_mission_dialog()),this,SLOT(on_ReturnButton_clicked()));
-    connect(mission_http,SIGNAL(Mission_data(QString)),history_mission,SLOT(MissionList_recv(QString)));
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(SendInfo())); //关联超时信号和曹函数 10S更新状态     //每10s更新世界时间以及FSM状态
+    unsigned int times = 500;
+    this->timer->start(times);     //定时器启动
 
-    history_mission->hide();
-
-    today_mission = new Today_mission(this);
-    connect(today_mission,SIGNAL(close_mission_dialog()),this,SLOT(on_ReturnButton_clicked()));
-    connect(mission_http,SIGNAL(Mission_data(QString)),today_mission,SLOT(MissionList_recv(QString)));
-    today_mission->hide();
-
-
+    history_thread = nullptr;
+    today_thread = nullptr;
+    flag = 0;
 //    QPixmap pixmap = QPixmap(":/new/picture/mission_interface/today_mission.png").scaled(this->size());
 //    QPalette Palette;
 //    Palette.setBrush(QPalette::Background, QBrush(pixmap));
 //    this->setPalette(Palette);
 }
 
+void Mission_Dialog::AutoRun(int BatteryInfo,int WaterInfo,QString WaterState)
+{
+    battery_info = BatteryInfo;
+    water_info = WaterInfo;
+    water_state = WaterState;
+}
+
+void Mission_Dialog::SendInfo(){
+    emit mission_show(battery_info,water_info,water_state);
+}
 
 Mission_Dialog::~Mission_Dialog()
 {
@@ -68,16 +77,26 @@ Mission_Dialog::~Mission_Dialog()
 
 void Mission_Dialog::on_ReturnButton_clicked()
 {
-    while(!history_mission->isfinished || !today_mission->isfinished){
-         QCoreApplication::processEvents(QEventLoop::AllEvents,10);
-    }
+//    while(!history_mission->isfinished || !today_mission->isfinished){
+//         QCoreApplication::processEvents(QEventLoop::AllEvents,10);
+//    }
 
     //mission_http->stop();
+    timer->stop();
+    delete timer;
     mission_http->exit();
     mission_http->wait();
 
-//    thread->quit();
-//    thread->deleteLater();
+    if(history_thread){
+    history_thread->quit();
+    history_thread->deleteLater();
+    //history_thread = nullptr;
+}
+    if(today_thread){
+    today_thread->quit();
+    today_thread->deleteLater();
+    //today_thread = nullptr;
+}
 
      while(!mission_http->isFinished() && mission_http->isRunning()){};
      this->close();
@@ -87,12 +106,24 @@ void Mission_Dialog::on_ReturnButton_clicked()
 void Mission_Dialog::on_HistoryButton_clicked()
 {
 #if 1
-    history_mission->show();
+    flag++;
+    if(flag == 1){
+        history_thread = new QThread(this);
+        history_mission = new History_mission;
+        history_mission->moveToThread(history_thread);
+        history_thread->start();
+        connect(history_mission,SIGNAL(close_mission_dialog()),this,SLOT(on_ReturnButton_clicked()));
+        connect(mission_http,SIGNAL(Mission_data(QString)),history_mission,SLOT(MissionList_recv(QString)));
+        connect(this,SIGNAL(mission_show(int,int,QString)),history_mission,SLOT(AutoRun(int,int,QString)));
+        //history_mission->hide();
+        history_mission->show();
 
-    //用于延迟隐藏或删除，防止闪绿屏
-    QTime dieTime =  QTime::currentTime().addMSecs(100);
-    while(QTime::currentTime() < dieTime)
-     QCoreApplication::processEvents(QEventLoop::AllEvents,100);
+        //用于延迟隐藏或删除，防止闪绿屏
+        QTime dieTime =  QTime::currentTime().addMSecs(100);
+        while(QTime::currentTime() < dieTime)
+         QCoreApplication::processEvents(QEventLoop::AllEvents,100);
+        this->hide();
+    }
 #else
     ui->HistoryButton->hide();
     ui->StartButton->hide();
@@ -120,15 +151,27 @@ void Mission_Dialog::on_HistoryButton_clicked()
 
 void Mission_Dialog::on_StartButton_clicked()
 {
-//    ui->HistoryButton->hide();
-//    ui->StartButton->hide();
-    today_mission->show();
+    flag++;
+    if(flag == 1){
 
-    //用于延迟隐藏或删除，防止闪绿屏
-    QTime dieTime =  QTime::currentTime().addMSecs(100);
-    while(QTime::currentTime() < dieTime)
-     QCoreApplication::processEvents(QEventLoop::AllEvents,100);
+        today_thread = new QThread(this);
+        today_mission = new Today_mission;
+        today_mission->moveToThread(today_thread);
+        today_thread->start();
+        connect(today_mission,SIGNAL(close_mission_dialog()),this,SLOT(on_ReturnButton_clicked()));
+        connect(mission_http,SIGNAL(Mission_data(QString)),today_mission,SLOT(MissionList_recv(QString)));
+        connect(this,SIGNAL(mission_show(int,int,QString)),today_mission,SLOT(AutoRun(int,int,QString)));
+        //today_mission->hide();
+    //    ui->HistoryButton->hide();
+    //    ui->StartButton->hide();
+        today_mission->show();
 
+        //用于延迟隐藏或删除，防止闪绿屏
+        QTime dieTime =  QTime::currentTime().addMSecs(100);
+        while(QTime::currentTime() < dieTime)
+         QCoreApplication::processEvents(QEventLoop::AllEvents,100);
+        this->hide();
+    }
 }
 
 void Mission_Dialog::on_HistoryButton_pressed()

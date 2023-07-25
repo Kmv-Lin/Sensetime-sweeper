@@ -28,11 +28,11 @@ MainWindow::MainWindow(QWidget *parent) :
      setAttribute(Qt::WA_DeleteOnClose);    //防止内存泄漏,窗口关闭时，子对象自动调用析构函数
     ui->setupUi(this);
 
-    //背景
-    QPixmap pixmap = QPixmap(":/new/picture/mainpicture1.png").scaled(this->size());
-    QPalette Palette;
-    Palette.setBrush(QPalette::Background, QBrush(pixmap));
-    this->setPalette(Palette);
+//    //背景
+//    QPixmap pixmap = QPixmap(":/new/picture/mainpicture1.png").scaled(this->size());
+//    QPalette Palette;
+//    Palette.setBrush(QPalette::Background, QBrush(pixmap));
+//    this->setPalette(Palette);
 
    ui->dateTimeEdit->setStyleSheet("QDateTimeEdit{background-color: rgba(0, 0, 0, 0);border:0px solid #838486;  }");//透明+取消线条
    ui->BatterBar->setStyleSheet("QProgressBar::chunk{background:solid #70DADF}QProgressBar{border-color: rgba(255, 255, 255, 0);color: rgb(255, 255, 255);background-color: rgba(255, 255, 255, 0);}");//电池图片+取消线条+颜色#70DADF  QProgressBar{border:0px solid #838486; text-align:Qt::AlignCenter;}
@@ -109,14 +109,16 @@ void MainWindow::vehicleStateSlot(QString str)
         all_num = mission_info["mission_all_num"].toInt();//for bug fix
 
         //显示电量
-         int battery_info = battery["battery_info"].toInt();
+         battery_info = battery["battery_info"].toInt();
          ui->BatterBar->setValue(battery_info);//Bar
         //qDebug() << "********battery_info is ********"<<battery_info;
 
          //显示水量
+        water_state = watter["state"].toString();
+        water_info = watter["watter_info"].toInt();
         set_watter_label(watter["state"].toString(), watter["watter_info"].toInt());
         //qDebug() << "********watter_info is ********"<<watter["watter_info"].toInt();
-
+        emit mission_show(battery_info,water_info,water_state);
         //车辆状态
         //QString vehicle_state = variantmap["vehicle_state"].toString();
         SYS_state = variantmap["vehicle_state"].toString();
@@ -173,6 +175,7 @@ void MainWindow::on_MissionButton_clicked()         //打开任务窗口
 {
     //ui->mission_widget->setVisible(false);//打开任务窗口
      Mission_Dialog  *win = new Mission_Dialog(this);
+     connect(this,SIGNAL(mission_show(int,int,QString)),win,SLOT(AutoRun(int,int,QString)));
      //win->setWindowFlags(Qt::Window);                //set as window增加窗口属性，会增加标题和边框！！
      win->show();
     //win->showFullScreen(); //隐藏顶部栏

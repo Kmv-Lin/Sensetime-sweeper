@@ -20,7 +20,7 @@ HttpReadThread::HttpReadThread(int flag1,QObject *parent) :
     if(this->flag == Start_Window){
         times = 2000;
     }else if(this->flag == Main_Window){
-        times = 10000;
+        times = 2000;
     }
     connect(m_pAutoTimer, SIGNAL(timeout()), this, SLOT(timeAuto()));
     //getDiskSpaceManger = new QNetworkAccessManager();
@@ -101,7 +101,7 @@ void HttpReadThread::vehicleStateFinished(QNetworkReply *reply)
 {
     QString str = reply->readAll();
     emit vehicleStateSignal(str);
-    qDebug() << "mainwindow:"<<str;
+    //qDebug() << "mainwindow:"<<str;
     reply->deleteLater();
 }
 

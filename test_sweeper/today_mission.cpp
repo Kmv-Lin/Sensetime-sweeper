@@ -12,7 +12,7 @@ Today_mission::Today_mission(QWidget *parent) :
      setAttribute(Qt::WA_DeleteOnClose);    //防止内存泄漏
     ui->setupUi(this);
 
-    isfinished = true;
+    //isfinished = true;
     ui->widget->installEventFilter(this);
 
 //    //字体颜色-white
@@ -22,6 +22,10 @@ Today_mission::Today_mission(QWidget *parent) :
 //    ui->ReturnButton->setStyleSheet("background-image: url(:/new/picture/mission_interface/Rectangle 252.png);border:1px solid #5DBFC4;border-radius:5px; ");//消除边框
     //"返回"背景翠绿色+字体白色+线宽1px翠绿色+四边圆角
     ui->ReturnButton->setStyleSheet("QPushButton{background-color: rgb(0, 150, 157);color:white;border:1px solid #00969D;border-radius:5px;  }");//线条
+
+    ui->dateTimeEdit->setStyleSheet("QDateTimeEdit{background-color: rgba(0, 0, 0, 0);border:0px solid #838486;  }");//透明+取消线条
+    ui->BatterBar->setStyleSheet("QProgressBar::chunk{background:solid #70DADF}QProgressBar{border-color: rgba(255, 255, 255, 0);color: rgb(255, 255, 255);background-color: rgba(255, 255, 255, 0);}");//电池图片+取消线条+颜色#70DADF  QProgressBar{border:0px solid #838486; text-align:Qt::AlignCenter;}
+    ui->BatterBar->setValue(0);//Bar
 
     //滚动按建设计
     ui->scrollArea->setStyleSheet("QScrollArea{background-color: rgba(0, 0, 0, 0);border:0px solid #838486;  }");//透明+取消线条
@@ -46,8 +50,8 @@ Today_mission::Today_mission(QWidget *parent) :
     connect(verticalScrollBar,SIGNAL(valueChanged(int)),this,SLOT(ScrollBarValchange(int)));
 
     //图片
-    pix = QPixmap(":/new/picture/startwindow/Ellipse.png");
-    pix = pix.scaled(150,150,Qt::KeepAspectRatio,Qt::SmoothTransformation);
+    pix = QPixmap(":/new/picture/startwindow/Ellipse 2.png");
+    //pix = pix.scaled(150,150,Qt::KeepAspectRatio,Qt::SmoothTransformation);
     this->timer = new QTimer();
     timer->start(10);
     connect(timer,SIGNAL(timeout()),this,SLOT(update()));
@@ -55,6 +59,26 @@ Today_mission::Today_mission(QWidget *parent) :
     ui->textEdit->setText("加载中");
     ui->textEdit->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
+}
+
+void Today_mission::set_watter_label(QString state, int watter_info)
+{
+    if(watter_info<35){
+        ui->water_label->setStyleSheet("QLabel{background-image: url(:/new/picture/water_low.png);border:0px solid #838486;  }");
+    }
+    else if(watter_info<70){
+        ui->water_label->setStyleSheet("QLabel{background-image: url(:/new/picture/water_middle.png);border:0px solid #838486;  }");
+    }
+    else
+        ui->water_label->setStyleSheet("QLabel{background-image: url(:/new/picture/water_full.png);border:0px solid #838486;  }");
+}
+
+void Today_mission::AutoRun(int battery_info,int water_info,QString water_state)
+{
+    datetime = QDateTime::currentDateTime();
+    ui->dateTimeEdit->setDateTime(datetime);
+    ui->BatterBar->setValue(battery_info);//Bar
+    set_watter_label(water_state, water_info);
 }
 
 void Today_mission::paint(){
@@ -82,7 +106,7 @@ void Today_mission::ScrollBarValchange(int val){
 
 
 void Today_mission::MissionList_recv(QString str){
-    isfinished = false;
+    //isfinished = false;
     timer->stop();
     delete timer;
     ui->widget->hide();
@@ -212,7 +236,7 @@ void Today_mission::MissionList_recv(QString str){
 
     }
 
-    isfinished = true;
+    //isfinished = true;
     //qDebug() << "today_finish";
 
     //ui->ReturnButton->setEnabled(true);
@@ -230,6 +254,7 @@ void Today_mission::on_ReturnButton_clicked()
     //qDebug() << "today_finish" << isfinished;
     this->close();
     emit close_mission_dialog();
+
     //qDebug() << "xxxx";
 }
 

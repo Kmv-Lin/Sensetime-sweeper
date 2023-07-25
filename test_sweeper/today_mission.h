@@ -13,6 +13,7 @@
 #include <QProcess>
 #include <QPainter>
 #include <QPaintEvent>
+#include <QDateTime>
 
 #include "popwindow/confirmmission_dialog.h"
 #include"history_mission.h"
@@ -32,6 +33,7 @@ public:
     ~Today_mission();
     bool isfinished;
     int angle;
+    void set_watter_label(QString, int);
 protected:
     bool eventFilter(QObject *, QEvent *) override;
 signals:
@@ -42,7 +44,7 @@ private slots:
     void MissionList_recv(QString);
     void list_btn_clicked(QString);
     void ScrollBarValchange(int);
-
+    void AutoRun(int ,int ,QString );
 private:
     Ui::Today_mission *ui;
     QPushButton *list_btn[MISSION_MAX];
@@ -55,7 +57,7 @@ private:
     QTimer *timer;
     QPixmap pix;
     void paint();
-
+    QDateTime datetime;
 };
 
 #endif // TODAY_MISSION_H

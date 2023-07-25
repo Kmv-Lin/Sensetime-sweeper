@@ -35,6 +35,7 @@ signals:
 
     void connected();
     void readyRead();
+    void mission_show(int,int,QString);
 
 private slots:
     void setNtp();
@@ -88,6 +89,10 @@ private:
     char Vehicle_Controller;
     volatile bool data_finish;
     QThread *thread;
+
+    int battery_info;
+    int water_info;
+    QString water_state;
 };
 
 #endif // MAINWINDOW_H

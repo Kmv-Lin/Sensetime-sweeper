@@ -14,7 +14,7 @@ History_mission::History_mission(QWidget *parent) :
         setAttribute(Qt::WA_DeleteOnClose);    //防止内存泄漏
         ui->setupUi(this);
 
-        isfinished = true;
+        //isfinished = true;
         ui->widget->installEventFilter(this);
 
         //ui->TodayButton->setPalette(pel);
@@ -25,13 +25,10 @@ History_mission::History_mission(QWidget *parent) :
         //"返回"背景翠绿色+字体白色+线宽1px翠绿色+四边圆角
          ui->ReturnButton->setStyleSheet("QPushButton{background-color: rgb(0, 150, 157);color:white;border:1px solid #00969D;border-radius:5px;  }");//线条
 
+         ui->dateTimeEdit->setStyleSheet("QDateTimeEdit{background-color: rgba(0, 0, 0, 0);border:0px solid #838486;  }");//透明+取消线条
+         ui->BatterBar->setStyleSheet("QProgressBar::chunk{background:solid #70DADF}QProgressBar{border-color: rgba(255, 255, 255, 0);color: rgb(255, 255, 255);background-color: rgba(255, 255, 255, 0);}");//电池图片+取消线条+颜色#70DADF  QProgressBar{border:0px solid #838486; text-align:Qt::AlignCenter;}
+         ui->BatterBar->setValue(0);//Bar
 
-//        //滚动按建设计
-//        scrollarea = new QScrollArea(this);
-//        scrollarea->setGeometry(5,57,470,221);
-//        scrollarea->setStyleSheet("QScrollArea{background-color: rgba(0, 0, 0, 0);border:0px solid #838486;  }");//透明+取消线条
-//        scrollarea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-//        scrollarea->hide();
         ui->scrollArea->setStyleSheet("QScrollArea{background-color: rgba(0, 0, 0, 0);border:0px solid #838486;  }");//透明+取消线条
         ui->scrollAreaWidgetContents->setStyleSheet("background-color: rgba(0, 0, 0, 0);");//透明
         ui->scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -56,14 +53,36 @@ History_mission::History_mission(QWidget *parent) :
         connect(verticalScrollBar,SIGNAL(valueChanged(int)),this,SLOT(ScrollBarValchange(int)));
 
         //图片
-        pix = QPixmap(":/new/picture/startwindow/Ellipse.png");
-        pix = pix.scaled(150,150,Qt::KeepAspectRatio,Qt::SmoothTransformation);
+        pix = QPixmap(":/new/picture/startwindow/Ellipse 2.png");
+        //pix = pix.scaled(150,150,Qt::KeepAspectRatio,Qt::SmoothTransformation);
         this->timer = new QTimer();
         timer->start(10);
         connect(timer,SIGNAL(timeout()),this,SLOT(update()));
         this->angle = 0;
         ui->textEdit->setText("加载中");
         ui->textEdit->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+}
+
+void History_mission::set_watter_label(QString state, int watter_info)
+{
+    if(watter_info<35){
+        ui->water_label->setStyleSheet("QLabel{background-image: url(:/new/picture/water_low.png);border:0px solid #838486;  }");
+    }
+    else if(watter_info<70){
+        ui->water_label->setStyleSheet("QLabel{background-image: url(:/new/picture/water_middle.png);border:0px solid #838486;  }");
+    }
+    else
+        ui->water_label->setStyleSheet("QLabel{background-image: url(:/new/picture/water_full.png);border:0px solid #838486;  }");
+}
+
+void History_mission::AutoRun(int battery_info,int water_info,QString water_state)
+{
+    //info = true;
+    datetime = QDateTime::currentDateTime();
+    ui->dateTimeEdit->setDateTime(datetime);
+    ui->BatterBar->setValue(battery_info);//Bar
+    set_watter_label(water_state, water_info);
+
 }
 
 void History_mission::paint(){
@@ -91,7 +110,7 @@ void History_mission::ScrollBarValchange(int val){
 
 
 void History_mission::MissionList_recv(QString str){
-    isfinished = false;
+    //isfinished = false;
     timer->stop();
     delete timer;
     ui->widget->hide();
@@ -103,7 +122,7 @@ void History_mission::MissionList_recv(QString str){
         qDebug() << "********get data failed********";
         return;
     }else{
-        ui->ReturnButton->setEnabled(false);
+
         //qDebug() << "emit1";
         int Totalnum = Missionmap["total"].toInt();
         int btnNum = Totalnum;
@@ -135,6 +154,7 @@ void History_mission::MissionList_recv(QString str){
         font.setFamily("Source Han Sans CN");
         font.setPointSize(18);
         //qDebug() << "dta" << strlist[strlist.length()-1];
+        ui->ReturnButton->setEnabled(false);
         for(int i=0; i<Totalnum;++i){
             QVariantMap strmap=parser.parse(strlist[i].toUtf8(),&ok).toMap();
             int MissionID = strmap["id"].toInt();
@@ -218,7 +238,7 @@ void History_mission::MissionList_recv(QString str){
 
     }
 
-     isfinished = true;
+     //isfinished = true;
      //qDebug() << "history_finish";
      ui->ReturnButton->setEnabled(true);
 }
@@ -234,6 +254,7 @@ void History_mission::on_ReturnButton_clicked()
     //qDebug() << "history_finish" << isfinished;
     this->close();
     emit close_mission_dialog();
+
 }
 
 

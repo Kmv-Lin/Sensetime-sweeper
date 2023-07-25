@@ -12,6 +12,7 @@
 #include<QDebug>
 #include <QLabel>
 #include <QScrollArea>
+#include <QDateTime>
 
 namespace Ui {
 class History_mission;
@@ -26,6 +27,8 @@ public:
     ~History_mission();
     int angle;
     bool isfinished;
+    void set_watter_label(QString, int);
+    bool info;
 protected:
     //void paintEvent(QPaintEvent *) override;
     bool eventFilter(QObject *, QEvent *) override;
@@ -38,7 +41,7 @@ private slots:
     void ScrollBarValchange(int);
     //void on_BookButton_clicked();
     //void on_TodayButton_clicked();
-
+    void AutoRun(int,int,QString);
 private:
     Ui::History_mission *ui;
     QScrollBar *verticalScrollBar;
@@ -48,6 +51,7 @@ private:
     QScrollArea *scrollarea;
     QLabel *lab;
     void paint();
+    QDateTime datetime;
 };
 
 #endif // HISTORY_MISSION_H
