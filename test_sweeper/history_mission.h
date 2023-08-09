@@ -17,6 +17,8 @@
 
 #include "thread/mission_http.h"
 
+#define HTTP_MAXNUM 32
+
 namespace Ui {
 class History_mission;
 }
@@ -42,8 +44,6 @@ private slots:
     void on_ReturnButton_clicked();
     void MissionList_recv(QString);
     void ScrollBarValchange(int);
-    //void on_BookButton_clicked();
-    //void on_TodayButton_clicked();
     void AutoRun(int,int,QString);
     void water_flash();
     void RefreshData();

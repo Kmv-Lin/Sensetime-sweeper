@@ -41,6 +41,7 @@ Mission_Dialog::Mission_Dialog(QWidget *parent) :
     mission_http = new Mission_http(GET_TOKEN,0,this);
     connect(mission_http,SIGNAL(finished()),mission_http,SLOT(deleteLater()));
     mission_http->start();
+    connect(mission_http,SIGNAL(Mission_data(QString)),this,SLOT(MissionList_recv(QString)));
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(SendInfo())); //关联超时信号和曹函数 10S更新状态     //每10s更新世界时间以及FSM状态
@@ -104,6 +105,10 @@ void Mission_Dialog::on_ReturnButton_clicked()
      this->close();
 }
 
+void Mission_Dialog::MissionList_recv(QString str){
+        data =str;
+        emit MissionList_data(data);
+}
 
 void Mission_Dialog::on_HistoryButton_clicked()
 {
@@ -115,17 +120,19 @@ void Mission_Dialog::on_HistoryButton_clicked()
         history_mission->moveToThread(history_thread);
         history_thread->start();
         connect(history_mission,SIGNAL(close_mission_dialog()),this,SLOT(on_ReturnButton_clicked()));
-        connect(mission_http,SIGNAL(Mission_data(QString)),history_mission,SLOT(MissionList_recv(QString)));
+        //connect(mission_http,SIGNAL(Mission_data(QString)),history_mission,SLOT(MissionList_recv(QString)));
+        connect(this,SIGNAL(MissionList_data(QString)),history_mission,SLOT(MissionList_recv(QString)));
         connect(this,SIGNAL(mission_show(int,int,QString)),history_mission,SLOT(AutoRun(int,int,QString)));
         //history_mission->hide();
         history_mission->show();
-
+        if(data != "") emit MissionList_data(data);
         //用于延迟隐藏或删除，防止闪绿屏
         QTime dieTime =  QTime::currentTime().addMSecs(100);
         while(QTime::currentTime() < dieTime)
          QCoreApplication::processEvents(QEventLoop::AllEvents,100);
         this->hide();
     }
+
 #else
     ui->HistoryButton->hide();
     ui->StartButton->hide();
@@ -151,6 +158,7 @@ void Mission_Dialog::on_HistoryButton_clicked()
 #endif
 }
 
+
 void Mission_Dialog::on_StartButton_clicked()
 {
     flag++;
@@ -161,19 +169,24 @@ void Mission_Dialog::on_StartButton_clicked()
         today_mission->moveToThread(today_thread);
         today_thread->start();
         connect(today_mission,SIGNAL(close_mission_dialog()),this,SLOT(on_ReturnButton_clicked()));
-        connect(mission_http,SIGNAL(Mission_data(QString)),today_mission,SLOT(MissionList_recv(QString)));
+        connect(today_mission,SIGNAL(RunningMissionID(QString)),this,SLOT(RunningMissionIDSlot(QString)));
+        //connect(mission_http,SIGNAL(Mission_data(QString)),today_mission,SLOT(MissionList_recv(QString)));
+        connect(this,SIGNAL(MissionList_data(QString)),today_mission,SLOT(MissionList_recv(QString)));
         connect(this,SIGNAL(mission_show(int,int,QString)),today_mission,SLOT(AutoRun(int,int,QString)));
         //today_mission->hide();
     //    ui->HistoryButton->hide();
     //    ui->StartButton->hide();
         today_mission->show();
-
+        if(data != "") emit MissionList_data(data);
         //用于延迟隐藏或删除，防止闪绿屏
         QTime dieTime =  QTime::currentTime().addMSecs(100);
         while(QTime::currentTime() < dieTime)
          QCoreApplication::processEvents(QEventLoop::AllEvents,100);
         this->hide();
     }
+}
+void Mission_Dialog::RunningMissionIDSlot(QString MissionID){
+    emit RunningMissionID(MissionID);
 }
 
 void Mission_Dialog::on_HistoryButton_pressed()

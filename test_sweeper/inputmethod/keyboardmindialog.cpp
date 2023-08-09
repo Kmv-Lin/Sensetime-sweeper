@@ -20,6 +20,10 @@ KeyboardMinDialog::KeyboardMinDialog(QWidget *parent) :
     intset_count =0;
      password.append("1234");
 
+     timer = new QTimer(this);
+     timer->setInterval(8000);
+     connect(timer,SIGNAL(timeout()),this,SLOT(passwd_refresh()));
+
     //密码模式
     ui->Number_lineEdit->setEchoMode(QLineEdit::Normal);
     //display->setEchoMode(QLineEdit::Password);
@@ -52,8 +56,8 @@ KeyboardMinDialog::KeyboardMinDialog(QWidget *parent) :
        signalMapper->setMapping(ui->pushButton_7,"7");
        signalMapper->setMapping(ui->pushButton_8,"8");
        signalMapper->setMapping(ui->pushButton_9,"9");
-       signalMapper->setMapping(ui->pushButton_10,"*");
-       signalMapper->setMapping(ui->pushButton_11,"#");
+       //signalMapper->setMapping(ui->pushButton_10,"*");
+       //signalMapper->setMapping(ui->pushButton_11,"#");
 
 
 
@@ -68,8 +72,8 @@ KeyboardMinDialog::KeyboardMinDialog(QWidget *parent) :
        connect(ui->pushButton_7,SIGNAL(clicked()),signalMapper,SLOT(map()));
        connect(ui->pushButton_8,SIGNAL(clicked()),signalMapper,SLOT(map()));
        connect(ui->pushButton_9,SIGNAL(clicked()),signalMapper,SLOT(map()));
-       connect(ui->pushButton_10,SIGNAL(clicked()),signalMapper,SLOT(map()));
-       connect(ui->pushButton_11,SIGNAL(clicked()),signalMapper,SLOT(map()));
+       //connect(ui->pushButton_10,SIGNAL(clicked()),signalMapper,SLOT(map()));
+       //connect(ui->pushButton_11,SIGNAL(clicked()),signalMapper,SLOT(map()));
 
        connect(signalMapper,SIGNAL(mapped(const QString&)),this,SLOT(setDispText(const QString&)));
        connect(signalMapper,SIGNAL(mapped(const QString&)),this,SLOT(removeQuiver(const QString&)));
@@ -157,6 +161,14 @@ void KeyboardMinDialog::on_closeButton_clicked()
     this->hide();
 }
 
+void KeyboardMinDialog::passwd_refresh(){
+    intset_str.clear();
+    ui->Number_lineEdit->clear();
+    waitingForOperand = true;
+    ui->Number_lineEdit->setEchoMode(QLineEdit::Normal);
+    ui->Number_lineEdit->setText("请输入密码");
+}
+
 /*
 * Name : void setDispText(const QString& text)
 * Type : slot
@@ -166,7 +178,9 @@ void KeyboardMinDialog::on_closeButton_clicked()
 */
 void KeyboardMinDialog::setDispText(const QString& text)
 {
-    //WeiqianFunctions::Beep();
+     //WeiqianFunctions::Beep();
+     timer->stop();
+     timer->setInterval(8000);
     if(waitingForOperand)
     {
         ui->Number_lineEdit->clear();
@@ -179,7 +193,14 @@ void KeyboardMinDialog::setDispText(const QString& text)
      intset_str.append(text);
 
     intset_count++;
-    if(intset_count>=4){
+
+}
+
+
+void KeyboardMinDialog::on_pushButton_11_clicked()
+{
+    //if(intset_count>=4){
+        //WeiqianFunctions::Beep();
         intset_count =0;
        // qDebug() <<intset_str << "?" <<password;
         //判断密码
@@ -189,13 +210,44 @@ void KeyboardMinDialog::setDispText(const QString& text)
             char pass = '1';
              emit keyin_value(&pass);
              this->hide();
-        }
-
             intset_str.clear();
             ui->Number_lineEdit->clear();
             waitingForOperand = true;
             ui->Number_lineEdit->setEchoMode(QLineEdit::Normal);
             ui->Number_lineEdit->setText("请输入密码");
+        }else{
+            intset_str.clear();
+            ui->Number_lineEdit->clear();
+            waitingForOperand = true;
+            ui->Number_lineEdit->setEchoMode(QLineEdit::Normal);
+            ui->Number_lineEdit->setText("密码错误");
+            timer->start();
+        }
 
+
+  //  }
+}
+
+void KeyboardMinDialog::on_pushButton_10_clicked()
+{
+    //WeiqianFunctions::Beep();
+    if(ui->Number_lineEdit->text() != "请输入密码" && ui->Number_lineEdit->text() != "密码错误"){
+        if(intset_count > 0){
+            intset_count--;
+            intset_str.remove(intset_count,1);
+            if(intset_count == 0){
+                waitingForOperand = true;
+                ui->Number_lineEdit->setEchoMode(QLineEdit::Normal);
+                ui->Number_lineEdit->setText("请输入密码");
+            }else{
+                ui->Number_lineEdit->setText(intset_str);
+            }
+        }else{
+            waitingForOperand = true;
+            ui->Number_lineEdit->setEchoMode(QLineEdit::Normal);
+            ui->Number_lineEdit->setText("请输入密码");
+        }
     }
+
+    //qDebug() << intset_str;
 }

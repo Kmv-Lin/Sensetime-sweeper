@@ -115,7 +115,7 @@ void NetWorkDialog::network_recv(QString str){
               signalMapper->setMapping(list_btn,wifi.toString());
               //list_btn->setStyleSheet("QPushButton{font-family: 'Source Han Sans CN';font-size: 18px;background-color:transparent;text-align:justify;border:1px solid #5DBFC4;border-radius:5px;  } ");
               list_btn->setStyleSheet("QPushButton{font-family: 'Source Han Sans CN';background-color:transparent;border:1px solid #5DBFC4;border-radius:5px;  } ");
-              int y = 57*(btnNum+1);
+              int y = 56*btnNum;
               list_btn->setGeometry(11,y,435,48);
               btnLeft->setText(wifi.toString());
               btnRight->setText("连接");
@@ -129,7 +129,7 @@ void NetWorkDialog::network_recv(QString str){
               btnNum++;
               list_btn->show();
           }
-          int contextHeight = btnNum*48 + (btnNum+1)*8 + 57;
+          int contextHeight = btnNum*48 + (btnNum+1)*8;
           ui->scrollAreaWidgetContents->setMinimumHeight(contextHeight);//必须这样才能显示滑块
           //verticalScrollBar->setMaximum(ui->scrollArea->verticalScrollBar()->maximum());
           verticalScrollBar->setMaximum(btnNum*32);

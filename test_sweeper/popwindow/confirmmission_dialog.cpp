@@ -3,8 +3,8 @@
 
 #include <QDebug>
 
-ConfirmMission_Dialog::ConfirmMission_Dialog(QString id,QWidget *parent) :
-    QDialog(parent),MissionID(id),
+ConfirmMission_Dialog::ConfirmMission_Dialog(QString id,QString mapname,QWidget *parent) :
+    QDialog(parent),MissionID(id),Map_name(mapname),
     ui(new Ui::ConfirmMission_Dialog)
 {
      qDebug() << "********ConfirmMission_Dialog open********";
@@ -17,6 +17,7 @@ ConfirmMission_Dialog::ConfirmMission_Dialog(QString id,QWidget *parent) :
      flag = 0;
 
 }
+
 
 ConfirmMission_Dialog::~ConfirmMission_Dialog()
 {
@@ -66,22 +67,26 @@ void ConfirmMission_Dialog::MissionList_recv(QString str){
     str.resize(strlist1[0].size());
     str.remove(0,strlist2[0].length()+1);
 
-    QString data = str;
-    qDebug() << "----------------" << data;
+    qDebug() << "----------------" <<str;
+
     bool runable = true;
     QStringList strlist = str.split("},");                                                              //按{ }分成字符串列表
-    for(int i=0; i<strlist.length(); i++){
-            if(i%2!=0){
-                if(strlist[i].at(11)  == '1' || strlist[i].at(11)  == '2' || strlist[i].at(11)  == '3' ||strlist[i].at(11)  == '4'  ||strlist[i].at(11)  == '5'){
-                    runable = false;
-                }
-                 qDebug() << strlist[i].at(11);
-                 //qDebug() << strlist[i].at(12);
-            }
+
+    for(int i=0; i<strlist.length()-1; i++){
+        if(i%2==0){
+            strlist[i] += "},";
+            strlist[i+1] += "}";
+            QString data = strlist[i] +strlist[i+1];
+            QVariantMap datamap=parser.parse(data.toUtf8(),&ok).toMap();
+            //QVariantMap missiondata = datamap["mission_param"].toMap();
+            //QString Mapname = missiondata["map_name"].toString();
+            int status = datamap["status"].toInt();
+            if(status == 0 || status == 1 || status == 2 ||status == 3 || status == 4 || status == 5){
+                  runable = false;
+              }
+            qDebug() << "First  GET_MISSION_LIST status" << status;
+        }
     }
-
-    //qDebug() << str;
-
 
     if(runable){
         qDebug() << "********First  GET_MISSION_LIST : have no mission running********";
@@ -96,9 +101,10 @@ void ConfirmMission_Dialog::MissionList_recv(QString str){
         mission_issue_http->start();
         //return;
     }else{                                                                                                                              //系统有任务列表，弹窗显示任务执行中...
+        qDebug() << "********First  GET_MISSION_LIST : have existed mission running********";
         timer = new QTimer(this);
-        QVariantMap Misparam_Map  = Misinfo_Map["missions_info"].toMap();           //具体的数据内容，可以用来执行操作
-        QVariantMap Mislist_Map= Misparam_Map["mission_param"].toMap();;
+       // QVariantMap Misparam_Map  = Misinfo_Map["missions_info"].toMap();           //具体的数据内容，可以用来执行操作
+        //QVariantMap Mislist_Map= Misparam_Map["mission_param"].toMap();
         //如果当前有任务，弹窗提示任务执行中...
         existmission_dialog = new Existmission_dialog(this);
         existmission_dialog->show();
@@ -169,31 +175,37 @@ void ConfirmMission_Dialog::list_showdelay_again(){
 void ConfirmMission_Dialog::MissionList_recv_again(QString str){                        //再次判断车端系统当前是否有任务
     QJson::Parser parser;
     bool ok;
-    QVariantMap Misinfo_Map=parser.parse(str.toUtf8(),&ok).toMap();
-    //QString Mis_data = Misinfo_Map["missions_info"].toString();
 
     QStringList strlist1 = str.split("]");                                                              //获取data中  [  ]  的数据
     QStringList strlist2 = str.split("[");
     str.resize(strlist1[0].size());
     str.remove(0,strlist2[0].length()+1);
 
-    QString data = str;
-    qDebug() << "----------------" <<data;
+    qDebug() << "----------------" <<str;
 
     bool runable = true;
     QStringList strlist = str.split("},");                                                              //按{ }分成字符串列表
-    for(int i=0; i<strlist.length(); i++){
-            if(i%2!=0){
-                if(strlist[i].at(11)  == '0' || strlist[i].at(11)  == '1' ||strlist[i].at(11)  == '2' || strlist[i].at(11)  == '3' ||strlist[i].at(11)  == '4'  ||strlist[i].at(11)  == '5'){
-                    runable = false;
-                }
-                 qDebug() << strlist[i].at(11);
-                 //qDebug() << strlist[i].at(12);
-            }
+
+    for(int i=0; i<strlist.length()-1; i++){
+        if(i%2==0){
+            strlist[i] += "},";
+            strlist[i+1] += "}";
+            QString data = strlist[i] +strlist[i+1];
+            QVariantMap datamap=parser.parse(data.toUtf8(),&ok).toMap();
+            QVariantMap missiondata = datamap["mission_param"].toMap();
+            QString Mapname = missiondata["map_name"].toString();
+            int status = datamap["status"].toInt();
+            if(status == 0 || status == 1 || status == 2 || status == 4 || status == 5){
+                  runable = false;
+              }
+              if(status == 3 && Mapname != Map_name){
+                  runable = false;
+              }
+            qDebug() << "MissionList_recv_again map_name" << Mapname;
+            qDebug() << "MissionList_recv_again status" << status;
+        }
     }
 
-
-    qDebug() << str;
     if(runable){                                                                                        //没有远程任务启动，任务下发成功
         qDebug() << "********MissionList_recv_again have no extra mission ********";
         //mission_list_http->stop();
@@ -201,6 +213,9 @@ void ConfirmMission_Dialog::MissionList_recv_again(QString str){                
         mission_list_http->wait();
         while(!mission_list_http->isFinished() && mission_list_http->isRunning());                                                             //等待http释放再释放父对象
         emit close_mission_dialog();
+        emit close_todaymission();
+        emit RunningMissionID(MissionID);
+        qDebug() << "running mission id:" << MissionID;
         //return;
     }else{                                                                                                                          //如果有任务，弹窗提示:远程下发了新任务，您的任务稍后执行
          timer = new QTimer(this);

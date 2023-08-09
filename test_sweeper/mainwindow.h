@@ -7,9 +7,13 @@
 #include <QDateTime>
 #include <QUdpSocket>
 #include <QThread>
+#include <QJson/Parser>
+#include <QJson/Serializer>
+#include "thread/mission_http.h"
 
 #include "inputmethod/inputmethod.h"
 #include "inputmethod/keyboardmindialog.h"
+#include "popwindow/continuemission_dialog.h"
 #include "thread/httpthread.h"
 #include "weiqianfunctions.h"
 #include "serialportreadthread.h"
@@ -36,7 +40,7 @@ signals:
     void connected();
     void readyRead();
     void mission_show(int,int,QString);
-
+    void RunningMissionID(QString);
 private slots:
     void setNtp();
     void connectsucess();
@@ -54,7 +58,7 @@ private slots:
     void sendData(char value);
 
     void vehicleStateSlot(QString str);
-
+    void RunningMissionIDSlot(QString);
     void set_statue_label(char mode);
     void set_watter_label(QString state, int watter_info);
     void set_Display_Label_IdleState(int finish, int allnum);
@@ -64,6 +68,8 @@ private slots:
 
     void MainWindow_FSM();
     void water_flash();
+    void MissionList_recv(QString);
+    void ReGetSupplyData();
 private:
     Ui::MainWindow *ui;
 
@@ -76,9 +82,11 @@ private:
     QDateTime datetime;
     my_thread *thread2;
     HttpReadThread *m_HttpThread;
+    Continuemission_dialog *continuemission;
 
     QTimer *timer;
     QTimer *water_timer;
+    QTimer *Continue_timer;
     uint8_t keyboard_flag;
     uint8_t keyboard_flag_setting;
     int finish_num;
@@ -94,6 +102,11 @@ private:
     int battery_info;
     int water_info;
     QString water_state;
+    bool supply_state;
+    QString RunningMissionId;
+    Mission_http *mission_list_http;
+    bool continue_done;
+    int continue_flag;
 };
 
 #endif // MAINWINDOW_H

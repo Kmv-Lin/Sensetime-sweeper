@@ -14,7 +14,7 @@ Today_mission::Today_mission(QWidget *parent) :
 
     //isfinished = true;
     ui->widget->installEventFilter(this);
-
+    //ui界面没法移到新线程，这里方便直接显示
     sign_label = new QLabel(this);
     sign_label->setGeometry(86,0,33,50);
     sign_label->setStyleSheet("QLabel{background-image: url(:/new/picture/WIFI_good.png);background-repeat:no-repeat;background-position:center center;}");
@@ -24,11 +24,7 @@ Today_mission::Today_mission(QWidget *parent) :
     rubbish_label->setGeometry(222,0,65,50);
     rubbish_label->setStyleSheet("QLabel{background-image: url(:/new/picture/Rubbish_normal.png);border:0px;  }");
 
-//    //字体颜色-white
-//    QPalette pel;
-//    pel.setColor(QPalette::ButtonText,Qt::white);
-//    ui->ReturnButton->setPalette(pel);
-//    ui->ReturnButton->setStyleSheet("background-image: url(:/new/picture/mission_interface/Rectangle 252.png);border:1px solid #5DBFC4;border-radius:5px; ");//消除边框
+
     //"返回"背景翠绿色+字体白色+线宽1px翠绿色+四边圆角
     ui->ReturnButton->setStyleSheet("QPushButton{background-color: rgb(0, 150, 157);color:white;border:1px solid #00969D;border-radius:5px;  }");//线条
 
@@ -43,7 +39,7 @@ Today_mission::Today_mission(QWidget *parent) :
     ui->scrollAreaWidgetContents->setStyleSheet("background-color: rgba(0, 0, 0, 0);");//透明
     ui->scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->textEdit->setStyleSheet("background-color: rgba(0, 0, 0, 0);border:0px;font-family: 'Source Han Sans CN';font-size: 22px;");//透明+取消线条
-
+    //垂直滚动条CSS
     scrollbarsheet = "QScrollBar:vertical { margin:3px 0 3px 0;  width:1px;background-image: url(:/new/picture/mission_interface/mission_bakg.png); } "
                      "QScrollBar::handle:vertical { background-color:#005357; margin:0 0px 0 0px; border-radius:5px; }"
                      "QScrollBar::sub-line:vertical,QScrollBar::add-line:vertical{subcontrol-origin: margin;height:1px;"
@@ -70,6 +66,7 @@ Today_mission::Today_mission(QWidget *parent) :
     ui->textEdit->setText("加载中");
     ui->textEdit->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
+    //超过8s没有收到数据，重新发送
     Cnt_timer = new QTimer(this);
     Cnt_timer->start(8000);
     connect(Cnt_timer,SIGNAL(timeout()),this,SLOT(RefreshData()));
@@ -78,6 +75,11 @@ Today_mission::Today_mission(QWidget *parent) :
 }
 
 void Today_mission::RefreshData(){
+    if(mission_http){
+        mission_http->exit();
+        mission_http->wait();
+    }
+    mission_http = nullptr;
     mission_http = new Mission_http(GET_TOKEN,0,this);
     connect(mission_http,SIGNAL(finished()),mission_http,SLOT(deleteLater()));
     connect(mission_http,SIGNAL(Mission_data(QString)),this,SLOT(MissionList_recv(QString)));
@@ -107,22 +109,24 @@ void Today_mission::water_flash(){
 
 void Today_mission::AutoRun(int battery_info,int water_info,QString water_state)
 {
+    //时间
     datetime = QDateTime::currentDateTime();
     ui->dateTimeEdit->setDateTime(datetime);
+    //电量
     if(battery_info <=15){
        ui->BatterBar->setStyleSheet("QProgressBar::chunk{background:solid #EC5249}QProgressBar{border-color: rgba(255, 255, 255, 0);color: rgb(255, 255, 255);background-color: rgba(255, 255, 255, 0);}");
     }else{
-       ui->BatterBar->setStyleSheet("QProgressBar::chunk{background:solid #70DADF}QProgressBar{border-color: rgba(255, 255, 255, 0);color: rgb(255, 255, 255);background-color: rgba(255, 255, 255, 0);}");
+       ui->BatterBar->setStyleSheet("QProgressBar::chunk{background:solid #4DC283}QProgressBar{border-color: rgba(255, 255, 255, 0);color: rgb(255, 255, 255);background-color: rgba(255, 255, 255, 0);}");
     }
     ui->BatterBar->setValue(battery_info);//Bar
-
+    //水量
     set_watter_label(water_state, water_info);
     if(water_info <= 10){
         water_flash();
     }
 
 }
-
+//加载界面
 void Today_mission::paint(){
     QPainter painter(ui->widget);
     int x = 45,y=15;
@@ -149,6 +153,7 @@ void Today_mission::ScrollBarValchange(int val){
 
 void Today_mission::MissionList_recv(QString str){
     //isfinished = false;
+    if(str != ""){
     timer->stop();
     delete timer;
     Cnt_timer->stop();
@@ -163,11 +168,10 @@ void Today_mission::MissionList_recv(QString str){
         qDebug() << "********get data failed********";
         return;
     }else{
-        //ui->ReturnButton->setEnabled(false);
-        //qDebug() << "emit2";
+        ui->ReturnButton->setEnabled(false);
         int Totalnum = Missionmap["total"].toInt();
         int btnNum = Totalnum;
-        int contextHeight = btnNum*48 + (btnNum+1)*8 +57;
+        int contextHeight = btnNum*48 + (btnNum+1)*8;
         ui->scrollAreaWidgetContents->setMinimumHeight(contextHeight);//必须这样才能显示滑块
 
         QStringList strlist1 = str.split("]");                                                              //获取data中  [  ]  的数据
@@ -218,14 +222,14 @@ void Today_mission::MissionList_recv(QString str){
                 list_btn[btnsum] = new QPushButton(ui->scrollAreaWidgetContents);
                 timelabel[btnsum] = new QLabel(ui->scrollAreaWidgetContents);
                 statusbutton[btnsum] = new QPushButton(ui->scrollAreaWidgetContents);
-                int y = 57*(btnsum+1);
+                int y = 56*btnsum;
                 list_btn[btnsum]->setGeometry(3,y,438,48);
                 list_btn[btnsum]->setStyleSheet("QPushButton{font-family: 'Source Han Sans CN';font-size: 18px;background-color:transparent;text-align:center;border:1px solid #5DBFC4;border-radius:5px;  } ");
                 list_btn[btnsum]->setText(QString("%1").arg(Mission_name));
                 connect(list_btn[btnsum],SIGNAL(clicked(bool)),signalMapper,SLOT(map()));
                 connect(statusbutton[btnsum],SIGNAL(clicked(bool)),signalMapper,SLOT(map()));
-                signalMapper->setMapping(list_btn[btnsum],MissionID);
-                signalMapper->setMapping(statusbutton[btnsum],MissionID);
+                signalMapper->setMapping(list_btn[btnsum],MissionID+'|'+Map_name);
+                signalMapper->setMapping(statusbutton[btnsum],MissionID+'|'+Map_name);
                 //list_btn[btnsum]->show();
 
                 timelabel[btnsum]->setGeometry(3+14,y+7,100,33);
@@ -233,7 +237,7 @@ void Today_mission::MissionList_recv(QString str){
                 timelabel[btnsum]->setStyleSheet("font-family: 'Source Han Sans CN';font-size: 18px;background-color:transparent;text-align:left; ");
                 QFont font = timelabel[btnsum]->font();
                 QString text = Start_time_show+"-"+End_time_show;
-                int textWidth = timelabel[btnsum]->fontMetrics().width(text);
+                int textWidth = timelabel[btnsum]->fontMetrics().width(text);                   //解决排布显示不齐
                 int width = timelabel[btnsum]->width();
                 int count = text.count()-1;
                 qreal space = qreal(width-textWidth)/count;
@@ -244,20 +248,21 @@ void Today_mission::MissionList_recv(QString str){
 
                 //connect(statusbutton[btnsum],SIGNAL(clicked(bool)),list_btn[btnsum],SLOT(click()));
                 statusbutton[btnsum]->setGeometry(3+350,y+4,77,40);
-                statusbutton[btnsum]->setStyleSheet("font-family: 'Source Han Sans CN';font-size: 18px;background-color:transparent;text-align:right; ");
-                if(Status == "DONE"){
-                    statusbutton[btnsum]->setStyleSheet("font-family: 'Source Han Sans CN';font-size: 18px;background-color:transparent;text-align:right;color : #05BE4F;");
-                    statusbutton[btnsum]->setEnabled(false);
-                    statusbutton[btnsum]->setText("已完成");
-                }else if(Status == "ABORTED"){
-                    statusbutton[btnsum]->setStyleSheet("font-family: 'Source Han Sans CN';font-size: 18px;background-color:transparent;text-align:right;color : #DD960C;");
-                    statusbutton[btnsum]->setEnabled(false);
-                    statusbutton[btnsum]->setText("任务中断");
-                }else{
-                    statusbutton[btnsum]->setEnabled(true);
-                    statusbutton[btnsum]->setStyleSheet("background-image: url(:/new/picture/mission_interface/Rectangle 254.png);font-family: 'Source Han Sans CN';font-size: 18px;text-align:right;color : rgb(255,255,255);border-radius:5px;");
-                    statusbutton[btnsum]->setText("一键补扫");
-                }
+                statusbutton[btnsum]->setStyleSheet("font-family: 'Source Han Sans CN';font-size: 18px;background-color:transparent;text-align:right; color: #05BE4F;border:none;");
+                statusbutton[btnsum]->setText("未开始");
+//                if(Status == "DONE"){                                                             //备用
+//                    statusbutton[btnsum]->setStyleSheet("font-family: 'Source Han Sans CN';font-size: 18px;background-color:transparent;text-align:right;color : #05BE4F;");
+//                    statusbutton[btnsum]->setEnabled(false);
+//                    statusbutton[btnsum]->setText("已完成");
+//                }else if(Status == "ABORTED"){
+//                    statusbutton[btnsum]->setStyleSheet("font-family: 'Source Han Sans CN';font-size: 18px;background-color:transparent;text-align:right;color : #DD960C;");
+//                    statusbutton[btnsum]->setEnabled(false);
+//                    statusbutton[btnsum]->setText("任务中断");
+//                }else{
+//                    statusbutton[btnsum]->setEnabled(true);
+//                    statusbutton[btnsum]->setStyleSheet("background-image: url(:/new/picture/mission_interface/Rectangle 254.png);font-family: 'Source Han Sans CN';font-size: 18px;text-align:right;color : rgb(255,255,255);border-radius:5px;");
+//                    statusbutton[btnsum]->setText("一键补扫");
+//                }
                 statusbutton[btnsum]->show();
                 list_btn[btnsum]->show();
                 btnsum++;
@@ -268,7 +273,7 @@ void Today_mission::MissionList_recv(QString str){
             }
             QCoreApplication::processEvents(QEventLoop::AllEvents,10);
         }
-        int btnrealHeight = btnsum*48 + (btnsum+1)*8 +57;                                //重新设置滑动框的大小
+        int btnrealHeight = btnsum*48 + (btnsum+1)*8;                                //重新设置滑动框的大小
         ui->scrollAreaWidgetContents->setMinimumHeight(btnrealHeight);//必须这样才能显示滑块
         verticalScrollBar->setMaximum(btnsum*32);
         //qDebug() << "scroll" << ui->scrollArea->verticalScrollBar()->maximum();
@@ -281,21 +286,31 @@ void Today_mission::MissionList_recv(QString str){
     }
 
     //isfinished = true;
-    //qDebug() << "today_finish";
 
-    //ui->ReturnButton->setEnabled(true);
+    ui->ReturnButton->setEnabled(true);
+    }
 }
 
-void Today_mission::list_btn_clicked(QString MissionID)
+void Today_mission::list_btn_clicked(QString Missiondata)
 {
+    QStringList data = Missiondata.split("|");
+    QString MissionID = data[0];
     qDebug() << "device id:"<< MissionID;
-    confirmmission_window = new ConfirmMission_Dialog(MissionID,this);
+    QString Map_name = data[1];
+    qDebug() << "map_name:" << Map_name;
+    confirmmission_window = new ConfirmMission_Dialog(MissionID,Map_name,this);
     confirmmission_window->show();
+    connect(confirmmission_window,SIGNAL(close_todaymission()),this,SLOT(on_ReturnButton_clicked()));
+    connect(confirmmission_window,SIGNAL(RunningMissionID(QString)),this,SLOT(RunningMissionIDSlot(QString)));
     //confirmmission_window = nullptr;
 }
+
+void Today_mission::RunningMissionIDSlot(QString MissionID){            //用于给 V1.2.2的补给能量弹窗提供ID
+    emit RunningMissionID(MissionID);
+}
+
 void Today_mission::on_ReturnButton_clicked()
 {
-    //qDebug() << "today_finish" << isfinished;
     Cnt_timer->stop();
     delete Cnt_timer;
 
@@ -307,7 +322,6 @@ void Today_mission::on_ReturnButton_clicked()
     this->close();
     emit close_mission_dialog();
 
-    //qDebug() << "xxxx";
 }
 
 Today_mission::~Today_mission()

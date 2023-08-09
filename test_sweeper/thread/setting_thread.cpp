@@ -7,7 +7,7 @@ setting_thread::setting_thread(QObject *parent) : QThread(parent)
 void setting_thread::run()
 {
     qDebug() << "********setting_thread running ********";
-    for(size_t i=0;i<=100;i++){
+    for(size_t i=0;i<=100;i++){                                             //used for system update
            if(!stopped){
                 QThread::msleep(100);
                 emit updating_progress(i,"running");

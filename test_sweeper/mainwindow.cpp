@@ -35,23 +35,25 @@ MainWindow::MainWindow(QWidget *parent) :
 //    this->setPalette(Palette);
 
    ui->dateTimeEdit->setStyleSheet("QDateTimeEdit{background-color: rgba(0, 0, 0, 0);border:0px solid #838486;  }");//透明+取消线条
-   ui->BatterBar->setStyleSheet("QProgressBar::chunk{background:solid #70DADF}QProgressBar{border-color: rgba(255, 255, 255, 0);color: rgb(255, 255, 255);background-color: rgba(255, 255, 255, 0);}");//电池图片+取消线条+颜色#70DADF  QProgressBar{border:0px solid #838486; text-align:Qt::AlignCenter;}
+   ui->BatterBar->setStyleSheet("QProgressBar::chunk{background:solid #4DC283}QProgressBar{border-color: rgba(255, 255, 255, 0);color: rgb(255, 255, 255);background-color: rgba(255, 255, 255, 0);}");//电池图片+取消线条+颜色#70DADF  QProgressBar{border:0px solid #838486; text-align:Qt::AlignCenter;}
    ui->BatterBar->setValue(0);//Bar
     //ui->mission_widget->setVisible(false);//隐藏任务窗口
 
    //ui->SettingButton->setStyleSheet("QPushButton{background:solid #0F9BA3;border:1px solid #0F9BA3; border-radius:5px; }");
 
-    thread2 = new my_thread(this);
+    this->setNtp();                                                                 //时间同步
+
+    //thread2 = new my_thread(this);
     timer = new QTimer(this);
 //    unsigned int times = 1000;
-    connect(timer, SIGNAL(timeout()), this, SLOT(AutoRun1S())); //关联超时信号和曹函数 10S更新状态     //每10s更新世界时间以及FSM状态
+    connect(timer, SIGNAL(timeout()), this, SLOT(AutoRun1S())); //关联超时信号和曹函数 10S更新状态     //每0.5s更新世界时间以及FSM状态
 
      m_pMySerialPort = new SerialPort();
      m_pReadThread = new SerialPortReadThread();
      connect(m_pReadThread, SIGNAL(receiveSignal(const char*)), this, SLOT(receiveData(const char*)));      //开启串口读数据，传递参数是读取的数据
 
     //inputmethod = new InputMethod(this);
-    keyin= new KeyboardMinDialog(this);                 //构造主界面时直接构建输入密码界面，然后隐藏  ——正常来讲不是这个逻辑
+    keyin= new KeyboardMinDialog(this);                 //构造主界面时直接构建输入密码界面，然后隐藏
     keyin->hide();
      connect(keyin, SIGNAL(keyin_value(const char * )), this, SLOT(KeyboardMinDialog_sign(const char *)));  //判断输入密码是用于打开设置面板还是向串口发送数据，密码正确触发keyin_value信号
 
@@ -62,7 +64,15 @@ MainWindow::MainWindow(QWidget *parent) :
      ui->RunningState_label->setStyleSheet("QLabel{background-color: rgb(15, 155, 163);border:1px solid #5DBFC4;border-top-right-radius:5px;border-top-left-radius:5px;color: rgb(255, 255, 255);  }");//线条
 
      water_timer = new QTimer(this);
-     connect(water_timer, SIGNAL(timeout()), this, SLOT(water_flash())); //关联超时信号和曹函数 10S更新状态     //每10s更新世界时间以及FSM状态
+     connect(water_timer, SIGNAL(timeout()), this, SLOT(water_flash())); //水位异常，0.7s水位闪烁
+
+     continuemission = new Continuemission_dialog(this);                    //V1.2.2补给能量弹窗
+     connect(this,SIGNAL(RunningMissionID(QString)),continuemission,SLOT(RunningMissionIDSlot(QString)));
+     continuemission->hide();
+     supply_state = false;
+
+     Continue_timer = new QTimer(this);
+     connect(Continue_timer,SIGNAL(timeout()),this,SLOT(ReGetSupplyData()));
 
      finish_num = 0;
      all_num = 0;
@@ -72,7 +82,9 @@ MainWindow::MainWindow(QWidget *parent) :
      Vehicle_Controller = 0xE0;
      progress=0;
 
-     this->setNtp();
+     continue_done = false;
+     continue_flag = 0;
+
 }
 
 MainWindow::~MainWindow()
@@ -95,7 +107,7 @@ void MainWindow::vehicleStateSlot(QString str)
         data_finish = 0;
     }
     else{
-        data_finish = 1;
+        data_finish = 1;                                                                    //用于判断是否成功获得车端数据
         QVariantMap result=variantmap["result"].toMap();
         QVariantMap battery=result["battery"].toMap();
         QVariantMap mission_info=result["mission_info"].toMap();
@@ -116,7 +128,7 @@ void MainWindow::vehicleStateSlot(QString str)
          if(battery_info <=15){
             ui->BatterBar->setStyleSheet("QProgressBar::chunk{background:solid #EC5249}QProgressBar{border-color: rgba(255, 255, 255, 0);color: rgb(255, 255, 255);background-color: rgba(255, 255, 255, 0);}");
          }else{
-            ui->BatterBar->setStyleSheet("QProgressBar::chunk{background:solid #70DADF}QProgressBar{border-color: rgba(255, 255, 255, 0);color: rgb(255, 255, 255);background-color: rgba(255, 255, 255, 0);}");
+            ui->BatterBar->setStyleSheet("QProgressBar::chunk{background:solid #4DC283}QProgressBar{border-color: rgba(255, 255, 255, 0);color: rgb(255, 255, 255);background-color: rgba(255, 255, 255, 0);}");
          }
          ui->BatterBar->setValue(battery_info);//Bar
         //qDebug() << "********battery_info is ********"<<battery_info;
@@ -126,7 +138,7 @@ void MainWindow::vehicleStateSlot(QString str)
         water_info = watter["watter_info"].toInt();
         set_watter_label(watter["state"].toString(), watter["watter_info"].toInt());
         //qDebug() << "********watter_info is ********"<<watter["watter_info"].toInt();
-        emit mission_show(battery_info,water_info,water_state);
+        emit mission_show(battery_info,water_info,water_state);                                                 //用于today_mission history_mission子线程ui显示
         //车辆状态
         //QString vehicle_state = variantmap["vehicle_state"].toString();
         SYS_state = variantmap["vehicle_state"].toString();
@@ -138,15 +150,20 @@ void MainWindow::vehicleStateSlot(QString str)
 //            ui->RunningState_label->hide();
             ;
         }
-//        else if(QString::compare(SYS_state,QString("IdleState"))==0)
-//        {
-//            finish_num = mission_info["finished_missions_num"].toInt();//for bug fix
-//            all_num = mission_info["mission_all_num"].toInt();//for bug fix
-
-//            set_statue_label(0xE0);
-//            ui->RunningState_label->hide();
-//            set_Display_Label_IdleState( finish_num, all_num);
-//        }
+        else if(QString::compare(SYS_state,QString("IdleState"))==0 && continue_done == true)                   //返回基站任务完成 且 状态由AddSupplyState 变为 IdleState
+        {
+            if(supply_state == true){
+                Continue_timer->stop();
+                supply_state = false;
+                continue_flag = 0;
+                continue_done = false;
+                continuemission->show();
+                //用于延迟隐藏或删除，防止闪绿屏
+                QTime dieTime =  QTime::currentTime().addMSecs(100);
+                while(QTime::currentTime() < dieTime)
+                 QCoreApplication::processEvents(QEventLoop::AllEvents,100);
+            }
+        }
         else if(QString::compare(SYS_state,QString("RunningState"))==0)
         {
                 //set_statue_label(0xE0);
@@ -162,9 +179,61 @@ void MainWindow::vehicleStateSlot(QString str)
         {
         ;
         }
-
+        else if(QString::compare(SYS_state,QString("AddSupplyState"))==0)
+        {
+            supply_state = true;
+            if(!Continue_timer->isActive())
+                Continue_timer->start(2000);
+        }
     }
+}
 
+void MainWindow::ReGetSupplyData(){                                                         //每2s查看车端 返回基站任务状态
+    mission_list_http = new Mission_http(GET_MISSION_LIST,0,this);
+    connect(mission_list_http,SIGNAL(Mission_data(QString)),this,SLOT(MissionList_recv(QString)));
+    connect(mission_list_http,SIGNAL(finished()),mission_list_http,SLOT(deleteLater()));
+    //mission_list_http->start();
+}
+
+void MainWindow::MissionList_recv(QString str){
+    QJson::Parser parser;
+    bool ok;
+    QVariantMap Misinfo_Map=parser.parse(str.toUtf8(),&ok).toMap();
+    if(!ok){
+        qDebug() << "********MissionList_recv failed********";
+    }
+    else{
+    QStringList strlist1 = str.split("]");                                                              //获取data中  [  ]  的数据
+    QStringList strlist2 = str.split("[");
+    str.resize(strlist1[0].size());
+    str.remove(0,strlist2[0].length()+1);
+
+    QStringList strlist = str.split("},");                                                              //按{ }分成字符串列表
+    for(int i=0; i<strlist.length(); i++){
+            if(i%2==0){
+                strlist[i] += "},";
+                strlist[i+1] += "}";
+                QString data = strlist[i] +strlist[i+1];
+                QVariantMap datamap=parser.parse(data.toUtf8(),&ok).toMap();
+                QVariantMap missiondata = datamap["mission_param"].toMap();
+                int status =  datamap["status"].toInt();
+                int missiontype = missiondata["mission_type"].toInt();
+                if(missiontype !=9){
+                    continue;
+                }else{
+                    if(status == 3){                                                            //返回基站任务进行中
+                        continue_done = false;
+                        continue_flag = 1;
+                    }else if(status == 5 || status == 7){                          //返回基站任务已完成或已结束
+                        if(continue_flag){
+                            continue_done = true;
+                            break;
+                        }
+                    }
+                }
+            }
+    }
+    }
 
 }
 
@@ -184,6 +253,7 @@ void MainWindow::on_MissionButton_clicked()         //打开任务窗口
     //ui->mission_widget->setVisible(false);//打开任务窗口
      Mission_Dialog  *win = new Mission_Dialog(this);
      connect(this,SIGNAL(mission_show(int,int,QString)),win,SLOT(AutoRun(int,int,QString)));
+     connect(win,SIGNAL(RunningMissionID(QString)),this,SLOT(RunningMissionIDSlot(QString)));
      //win->setWindowFlags(Qt::Window);                //set as window增加窗口属性，会增加标题和边框！！
      win->show();
     //win->showFullScreen(); //隐藏顶部栏
@@ -196,6 +266,10 @@ void MainWindow::on_MissionButton_clicked()         //打开任务窗口
      //this->hide();
      //WeiqianFunctions::Beep();
 
+}
+void MainWindow::RunningMissionIDSlot(QString MissionID){               //用于给 V1.2.2的补给能量弹窗提供ID
+    RunningMissionId = MissionID;
+    emit RunningMissionID(RunningMissionId);
 }
 
 void MainWindow::AutoRun1S()
@@ -213,6 +287,8 @@ void MainWindow::AutoRun1S()
     MainWindow_FSM();
 
 }
+
+/*********************************用于NTP时间同步*********************************/
 void MainWindow::setNtp()
 {
     ntpIP = "time.windows.com";    //windows NTP服务器地址
@@ -296,10 +372,7 @@ void MainWindow::readingDataGrams()
     this->udpSocket->disconnectFromHost();
     this->udpSocket->close();
 }
-
-
-
-
+/*********************************用于NTP时间同步*********************************/
 
 void MainWindow::Receive_MainW_show(bool data_finished){
     this->show();
@@ -514,7 +587,7 @@ void MainWindow::set_Display_Label_IdleState(int finish, int allnum)
     char buffer[256];
 
     sprintf(buffer,"已完成任务：%d/%d",finish,allnum);
-
+    ui->Display_Label->setStyleSheet("QLabel{color:rgb(0,0,0);}");
     ui->Display_Label->setText(buffer);
 
 //    /*采用HTML格式同时显示图片和文字*/
@@ -533,7 +606,7 @@ void MainWindow::set_Display_Label_Runningstate(int progress)
     char buffer[256];
 
     sprintf(buffer,"当前任务完成：%d%%", progress);
-
+    ui->Display_Label->setStyleSheet("QLabel{color:rgb(0,0,0);}");
     ui->Display_Label->setText(buffer);
 
 }
@@ -576,6 +649,11 @@ void MainWindow::MainWindow_FSM()
             ui->RunningState_label->hide();
             FSM_state = 2;
         }
+        else if(QString::compare(SYS_state,QString("AddSupplyState")) == 0){
+            ui->Display_Label->setStyleSheet("QLabel{color:rgb(255,0,0);}");
+            ui->Display_Label->setText("能量不足！！");
+            set_statue_label(0XFF);
+        }
         else
         {
             set_statue_label(0xE0);
@@ -587,10 +665,16 @@ void MainWindow::MainWindow_FSM()
         if((Vehicle_Controller==0xE0) && (QString::compare(SYS_state,QString("IdleState"))==0)){
             FSM_state = 0;
             ui->RunningState_label->hide();
+
         }
         else if((QString::compare(SYS_state,QString("SuspendState"))==0)){
             FSM_state = 2;
             ui->RunningState_label->hide();
+        }
+        else if(QString::compare(SYS_state,QString("AddSupplyState")) == 0){
+            ui->Display_Label->setStyleSheet("QLabel{color:rgb(255,0,0);}");
+            ui->Display_Label->setText("能量不足！！");
+            set_statue_label(0XFF);
         }
         else
         {
@@ -632,7 +716,7 @@ void MainWindow::MainWindow_FSM()
             }
             else
                 set_statue_label(Vehicle_Controller);
-
+            ui->Display_Label->setStyleSheet("QLabel{color:rgb(0,0,0);}");
             ui->Display_Label->setText("暂停作业");
         }
         break;

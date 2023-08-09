@@ -36,9 +36,9 @@
    <property name="geometry">
     <rect>
      <x>5</x>
-     <y>57</y>
+     <y>114</y>
      <width>470</width>
-     <height>221</height>
+     <height>158</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -56,41 +56,41 @@
       <x>0</x>
       <y>0</y>
       <width>468</width>
-      <height>219</height>
+      <height>156</height>
      </rect>
     </property>
-    <widget class="QPushButton" name="ReturnButton">
-     <property name="geometry">
-      <rect>
-       <x>15</x>
-       <y>1</y>
-       <width>105</width>
-       <height>48</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>24</pointsize>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true"/>
-     </property>
-     <property name="text">
-      <string>返回</string>
-     </property>
-     <property name="icon">
-      <iconset resource="picture.qrc">
-       <normaloff>:/new/picture/setting_interface/return.png</normaloff>:/new/picture/setting_interface/return.png</iconset>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>21</width>
-       <height>14</height>
-      </size>
-     </property>
-    </widget>
    </widget>
+  </widget>
+  <widget class="QPushButton" name="ReturnButton">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>58</y>
+     <width>105</width>
+     <height>48</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>24</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string>返回</string>
+   </property>
+   <property name="icon">
+    <iconset resource="picture.qrc">
+     <normaloff>:/new/picture/setting_interface/return.png</normaloff>:/new/picture/setting_interface/return.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>21</width>
+     <height>14</height>
+    </size>
+   </property>
   </widget>
  </widget>
  <resources>

@@ -44,8 +44,14 @@ private slots:
     void AutoRun(int,int,QString);
 
     void SendInfo();
+
+    void RunningMissionIDSlot(QString);
+
+    void MissionList_recv(QString);
 signals:
     void mission_show(int,int,QString);
+    void RunningMissionID(QString);
+    void MissionList_data(QString);
 private:
     Ui::Mission_Dialog *ui;
     Mission_http *mission_http;
@@ -59,6 +65,7 @@ private:
     QDateTime datetime;
     int flag;
     bool DataSend;
+    QString data;
 };
 
 #endif // MISSION_DIALOG_H

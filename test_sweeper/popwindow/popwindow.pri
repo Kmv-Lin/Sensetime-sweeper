@@ -3,7 +3,8 @@ HEADERS += \
     $$PWD/selfcheck_dialog.h \
     $$PWD/existmission_dialog.h \
     $$PWD/remotemission_dialog.h \
-    $$PWD/cleardiskmem_dialog.h
+    $$PWD/cleardiskmem_dialog.h \
+    $$PWD/continuemission_dialog.h
 
 
 SOURCES += \
@@ -11,14 +12,16 @@ SOURCES += \
     $$PWD/selfcheck_dialog.cpp \
     $$PWD/existmission_dialog.cpp \
     $$PWD/remotemission_dialog.cpp \
-    $$PWD/cleardiskmem_dialog.cpp
+    $$PWD/cleardiskmem_dialog.cpp \
+    $$PWD/continuemission_dialog.cpp
 
 FORMS += \
     $$PWD/confirmmission_dialog.ui \
     $$PWD/selfcheck_dialog.ui \
     $$PWD/existmission_dialog.ui \
     $$PWD/remotemission_dialog.ui \
-    $$PWD/cleardiskmem_dialog.ui
+    $$PWD/cleardiskmem_dialog.ui \
+    $$PWD/continuemission_dialog.ui
 
 RESOURCES += \
     $$PWD/popwindow_pic.qrc

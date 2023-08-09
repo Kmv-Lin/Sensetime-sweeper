@@ -19,7 +19,8 @@
 #define GET_TOKEN 0
 #define GET_MISSION_LIST 1
 #define POST_MISSION_ISSUE 2
-
+#define POST_MISSION_RESUME 3
+#define POST_MISSION_CANCEL 4
 //extern QString mis_Header;
 
 class Mission_http : public QThread
@@ -50,6 +51,7 @@ private:
     QNetworkRequest reqMission;
     QString fullRequest;
     QTimer *ptm;
+    QSslConfiguration conf;
 };
 
 #endif // MISSION_HTTP_H

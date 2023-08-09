@@ -20,7 +20,7 @@ Existmission_dialog::Existmission_dialog(QWidget *parent) :
     font.setFamily("Source Han Sans CN");
     font.setPointSize(18);
     ui->textEdit->setFont(font);
-    ui->textEdit->setText("5s后关闭窗口...");
+    ui->textEdit->setText("20s后关闭窗口...");
     ui->textEdit->setStyleSheet("QTextEdit{background-color: rgba(0, 0, 0, 0);border:0px solid #838486;color: rgb(13, 146, 153);  }");//透明+取消线条
     ui->textEdit->setAlignment(Qt::AlignCenter);
 }

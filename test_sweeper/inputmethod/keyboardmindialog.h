@@ -5,6 +5,7 @@
 #include <QtGui>
 #include <QSignalMapper>
 #include <QPushButton>
+#include <QTimer>
 
 namespace Ui {
 class KeyboardMinDialog;
@@ -27,6 +28,12 @@ private slots:
     void setDispText(const QString& text);
     void removeQuiver(const QString& text);
     void clickdelay();
+    void on_pushButton_11_clicked();
+
+    void on_pushButton_10_clicked();
+
+    void passwd_refresh();
+
 private:
     Ui::KeyboardMinDialog *ui;
 
@@ -35,7 +42,7 @@ private:
     uint8_t intset_count;
     QString intset_str;
     QString password;
-
+    QTimer *timer;
 };
 
 #endif // KEYBOARDMINDIALOG_H

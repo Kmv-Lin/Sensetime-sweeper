@@ -12,6 +12,9 @@ extern QString mis_Headervalue;
 extern QString mis_Missionlist;
 extern QString mis_Issuetask;
 
+extern QString mis_Resumetask;
+extern QString mis_Canceltask;
+
 class com_mission
 {
 public:

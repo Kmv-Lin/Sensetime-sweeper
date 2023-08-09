@@ -39,7 +39,7 @@ protected:
     bool eventFilter(QObject *, QEvent *) override;
 signals:
     void close_mission_dialog();
-
+    void RunningMissionID(QString);
 private slots:
     void on_ReturnButton_clicked();
     void MissionList_recv(QString);
@@ -48,6 +48,7 @@ private slots:
     void AutoRun(int ,int ,QString );
     void water_flash();
     void RefreshData();
+    void RunningMissionIDSlot(QString);
 private:
     Ui::Today_mission *ui;
     QPushButton *list_btn[MISSION_MAX];

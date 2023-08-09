@@ -10,6 +10,8 @@ Mission_http::Mission_http(int flag,QString ID,QObject *parent) :
     //m_pAutoTimer  =  new QTimer;
     //times = 2000;
     //connect(m_pAutoTimer, SIGNAL(timeout()), this, SLOT(timeAuto()));
+
+
     switch(this->flag1){
         case GET_TOKEN:
             tokenManager = new QNetworkAccessManager(this);
@@ -48,12 +50,11 @@ Mission_http::Mission_http(int flag,QString ID,QObject *parent) :
             missionManager = new QNetworkAccessManager(this);
             connect(missionManager,SIGNAL(finished(QNetworkReply*)),this, SLOT(missionFinished(QNetworkReply*)));
 
-            QSslConfiguration conf = reqToken.sslConfiguration();
+            conf = reqToken.sslConfiguration();
             conf.setPeerVerifyMode(QSslSocket::VerifyNone);
             conf.setProtocol(QSsl::AnyProtocol);
             reqToken.setSslConfiguration(conf);
 
-            //QString token = "eyJhbGciOiJIUzI1NiJ9.eyJkYXRhIjp7InN5bXBob255X2RldmljZV9pZCI6ImJjNGJlNGM3MWZlMzdiZWZjMjgzZWMyMzM0ZDgzZGEyNWQzMGM4OGFhNGYxMTBhM2RiZDU0NzE5MTFiNDc2MzkiLCJzZWNyZXQiOiI0OWY4MTk4MDJkZjc0YjBlOTViYTZkN2JjZjQ5OTQyMSIsImxvZ2luX3R5cGUiOiJkZXZpY2UifSwiZXhwIjoxNjg5MDM5OTUwfQ.joS1K_OXQrFD1wtxlvHNaXpK_ZbVuf6DkfkMLpQDoIg";
             reqToken.setRawHeader("authorization",token.toLocal8Bit());
             reqToken.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
             fullRequest =mis_Header+mis_Headername+MissionID+mis_Issuetask;                                        //https://robosweeper.senseauto.com:32461/api/missions/{id}/perform_now
@@ -61,6 +62,42 @@ Mission_http::Mission_http(int flag,QString ID,QObject *parent) :
             reqToken.setUrl(QUrl(fullRequest));
             missionManager->post(reqToken,QByteArray(""));
             break;
+
+        case POST_MISSION_RESUME:
+            tokenManager = new QNetworkAccessManager(this);
+            missionManager = new QNetworkAccessManager(this);
+            connect(missionManager,SIGNAL(finished(QNetworkReply*)),this, SLOT(missionFinished(QNetworkReply*)));
+
+            conf = reqToken.sslConfiguration();
+            conf.setPeerVerifyMode(QSslSocket::VerifyNone);
+            conf.setProtocol(QSsl::AnyProtocol);
+            reqToken.setSslConfiguration(conf);
+
+            reqToken.setRawHeader("authorization",token.toLocal8Bit());
+            reqToken.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
+            fullRequest =mis_Header+mis_Headername+MissionID+mis_Resumetask;                                        //https://robosweeper.senseauto.com:32461/api/missions/{id}/resume_mission
+            qDebug() << "mission_resume" <<fullRequest;
+            reqToken.setUrl(QUrl(fullRequest));
+            missionManager->post(reqToken,QByteArray(""));
+            break;
+
+    case POST_MISSION_CANCEL:
+        tokenManager = new QNetworkAccessManager(this);
+        missionManager = new QNetworkAccessManager(this);
+        connect(missionManager,SIGNAL(finished(QNetworkReply*)),this, SLOT(missionFinished(QNetworkReply*)));
+
+        conf = reqToken.sslConfiguration();
+        conf.setPeerVerifyMode(QSslSocket::VerifyNone);
+        conf.setProtocol(QSsl::AnyProtocol);
+        reqToken.setSslConfiguration(conf);
+
+        reqToken.setRawHeader("authorization",token.toLocal8Bit());
+        reqToken.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
+        fullRequest =mis_Header+mis_Headername+MissionID+mis_Canceltask;                                        //https://robosweeper.senseauto.com:32461/api/missions/{id}/cancel_mission
+        qDebug() << "mission_cancel" <<fullRequest;
+        reqToken.setUrl(QUrl(fullRequest));
+        missionManager->post(reqToken,QByteArray(""));
+        break;
     }
 
 //    if(this->flag1 == GET_TOKEN){                                                                                               //GET_TOKEN
@@ -153,10 +190,10 @@ void Mission_http::tokenFinished(QNetworkReply *reply){
     QString fullRequest = mis_Header+mis_Headername;
     //QString fullRequest = requestHeader+requestState;
     qDebug() << "mission_req" <<fullRequest;
-    QSslConfiguration conf = reqMission.sslConfiguration();
-    conf.setPeerVerifyMode(QSslSocket::VerifyNone);
-    conf.setProtocol(QSsl::AnyProtocol);
-    reqMission.setSslConfiguration(conf);
+    QSslConfiguration conf1 = reqMission.sslConfiguration();
+    conf1.setPeerVerifyMode(QSslSocket::VerifyNone);
+    conf1.setProtocol(QSsl::AnyProtocol);
+    reqMission.setSslConfiguration(conf1);
 
     reqMission.setUrl(QUrl(fullRequest));
     //QString token = "eyJhbGciOiJIUzI1NiJ9.eyJkYXRhIjp7InN5bXBob255X2RldmljZV9pZCI6ImJjNGJlNGM3MWZlMzdiZWZjMjgzZWMyMzM0ZDgzZGEyNWQzMGM4OGFhNGYxMTBhM2RiZDU0NzE5MTFiNDc2MzkiLCJzZWNyZXQiOiI0OWY4MTk4MDJkZjc0YjBlOTViYTZkN2JjZjQ5OTQyMSIsImxvZ2luX3R5cGUiOiJkZXZpY2UifSwiZXhwIjoxNjg5MDM5OTUwfQ.joS1K_OXQrFD1wtxlvHNaXpK_ZbVuf6DkfkMLpQDoIg";
@@ -169,7 +206,7 @@ void Mission_http::missionFinished(QNetworkReply *reply){
 
     QString mission_list = reply->readAll();
     qDebug() << "mission_list:" << mission_list;
-    qDebug() << "emit";
+    //qDebug() << "emit";
     emit Mission_data(mission_list);
     reply->deleteLater();
 
